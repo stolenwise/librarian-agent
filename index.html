@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Librarian Agent — Lewis Stone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0A0908;
+  --surface: #111009;
+  --surface2: #181510;
+  --border: #252018;
+  --border2: #2E2820;
+  --text: #E2D9CC;
+  --muted: #6B6055;
+  --gold: #C9A96E;
+  --gold-dim: #7A5E38;
+  --green: #4D9E6B;
+  --red: #C05A4A;
+  --blue: #4A7FC1;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── DOT GRID TEXTURE ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle, #2A2318 1px, transparent 1px);
+  background-size: 28px 28px;
+  opacity: .45;
+  pointer-events: none;
+  z-index: 0;
+}
+
+* { position: relative; z-index: 1; }
+
+/* ── MASTHEAD ── */
+.masthead {
+  border-bottom: 1px solid var(--border);
+  padding: 18px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+.masthead-left { display: flex; align-items: center; gap: 20px; }
+.status-pill {
+  display: flex; align-items: center; gap: 7px;
+  background: #0D1A0F;
+  border: 1px solid #1A3320;
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 10px;
+  color: var(--green);
+}
+.pulse {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  animation: pulse 2.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .4; transform: scale(.8); }
+}
+.masthead-right { display: flex; gap: 24px; color: var(--muted); }
+.masthead-right a {
+  color: var(--muted); text-decoration: none;
+  transition: color .2s;
+}
+.masthead-right a:hover { color: var(--text); }
+
+/* ── HERO ── */
+.hero {
+  padding: 80px 48px 64px;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+.hero-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--gold);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hero-eyebrow::before {
+  content: '';
+  width: 32px;
+  height: 1px;
+  background: var(--gold-dim);
+}
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(72px, 12vw, 160px);
+  line-height: .9;
+  letter-spacing: -4px;
+  color: #F0E8DC;
+  margin-bottom: 16px;
+}
+.hero-title em {
+  font-style: italic;
+  color: var(--gold);
+}
+.hero-subtitle {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(18px, 3vw, 28px);
+  color: var(--muted);
+  font-weight: 400;
+  margin-bottom: 48px;
+  max-width: 560px;
+  line-height: 1.4;
+}
+.hero-body {
+  display: flex;
+  gap: 64px;
+  align-items: flex-end;
+}
+.hero-desc {
+  max-width: 480px;
+  font-size: 15px;
+  color: #9A8E82;
+  line-height: 1.8;
+  flex: 1;
+}
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+  align-items: center;
+}
+.btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  padding: 12px 24px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all .2s;
+  letter-spacing: .5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-gold {
+  background: var(--gold);
+  color: #0A0908;
+  font-weight: 700;
+}
+.btn-gold:hover { background: #D4B07A; }
+.btn-ghost {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border2);
+}
+.btn-ghost:hover { color: var(--text); border-color: var(--muted); }
+
+/* ── TICKER STRIP ── */
+.ticker {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 48px;
+  display: flex;
+  gap: 0;
+  overflow: hidden;
+  background: var(--surface);
+}
+.ticker-item {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding-right: 64px;
+  flex-shrink: 0;
+}
+.ticker-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--gold);
+}
+.ticker-label {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 500;
+}
+.ticker-sep {
+  width: 1px;
+  background: var(--border2);
+  height: 36px;
+  align-self: center;
+  margin-right: 64px;
+  flex-shrink: 0;
+}
+
+/* ── TWO-COL LAYOUT ── */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid var(--border);
+}
+.two-col > * {
+  padding: 64px 48px;
+}
+.two-col > *:first-child {
+  border-right: 1px solid var(--border);
+}
+.col-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.col-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.col-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 3vw, 40px);
+  line-height: 1.15;
+  color: #F0E8DC;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+.col-heading em { font-style: italic; color: var(--gold); }
+.col-body { font-size: 14.5px; color: #8A8078; line-height: 1.8; }
+.col-body p + p { margin-top: 16px; }
+
+/* capability list */
+.cap-list { list-style: none; margin-top: 28px; display: flex; flex-direction: column; gap: 12px; }
+.cap-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  font-size: 13.5px;
+  color: #9A8E82;
+  line-height: 1.5;
+}
+.cap-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--gold-dim);
+  padding-top: 3px;
+  flex-shrink: 0;
+  width: 20px;
+}
+
+/* ── ARCHITECTURE SECTION ── */
+.arch-section {
+  padding: 64px 48px;
+  border-bottom: 1px solid var(--border);
+}
+.arch-header {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  margin-bottom: 48px;
+}
+.arch-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: #F0E8DC;
+}
+.arch-heading em { font-style: italic; color: var(--gold); }
+.arch-desc-inline {
+  font-size: 13px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* diagram containers */
+.diag-block {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.diag-block-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.diag-row { display: flex; gap: 10px; align-items: stretch; }
+.diag-node {
+  flex: 1;
+  padding: 14px 16px;
+  border-radius: 4px;
+  border: 1px solid var(--border2);
+  background: var(--surface2);
+}
+.dn-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 5px;
+}
+.dn-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #E8DED2;
+  margin-bottom: 3px;
+}
+.dn-detail {
+  font-size: 10.5px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.diag-arrow {
+  flex: 0 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--border2);
+  font-size: 14px;
+}
+.diag-vspace {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 0;
+  gap: 3px;
+}
+.diag-vspace-line {
+  width: 1px;
+  height: 18px;
+  background: var(--border2);
+}
+.diag-vspace-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5px;
+  color: var(--muted);
+}
+
+/* node color variants */
+.nd-amber { border-color: #3D2A10; background: #110C06; }
+.nd-amber .dn-label { color: #8A5C2A; }
+.nd-purple { border-color: #2A1A40; background: #0D0917; }
+.nd-purple .dn-label { color: #6A3EA0; }
+.nd-blue { border-color: #1A2A40; background: #080F18; }
+.nd-blue .dn-label { color: #3A6A9E; }
+.nd-teal { border-color: #0F2E26; background: #060F0D; }
+.nd-teal .dn-label { color: #2A7A6A; }
+.nd-green { border-color: #142810; background: #070E06; }
+.nd-green .dn-label { color: #3A7A3A; }
+.nd-rose { border-color: #2E0E0A; background: #0F0605; }
+.nd-rose .dn-label { color: #8A3020; }
+.nd-slate { border-color: #1E1A16; background: #0A0906; }
+.nd-slate .dn-label { color: #4A4038; }
+
+/* pipeline strip */
+.pipeline-strip {
+  display: flex;
+  gap: 0;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.pipe-step {
+  flex: 1;
+  padding: 18px 16px;
+  border-right: 1px solid var(--border2);
+  position: relative;
+}
+.pipe-step:last-child { border-right: none; }
+.pipe-step::after {
+  content: '›';
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--border2);
+  font-size: 18px;
+  z-index: 2;
+}
+.pipe-step:last-child::after { display: none; }
+.pipe-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--gold-dim);
+  margin-bottom: 6px;
+}
+.pipe-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #E0D6CA;
+  margin-bottom: 4px;
+}
+.pipe-detail {
+  font-size: 10.5px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* ── TECH STACK ── */
+.stack-section {
+  padding: 48px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.stack-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 28px;
+}
+.stack-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 6px 14px;
+  border-radius: 3px;
+  border: 1px solid var(--border2);
+  color: var(--muted);
+  background: var(--surface2);
+  transition: all .2s;
+  cursor: default;
+}
+.stack-tag:hover {
+  border-color: var(--gold-dim);
+  color: var(--gold);
+}
+
+/* ── FOOTER ── */
+footer {
+  padding: 36px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+}
+footer a { color: var(--muted); text-decoration: none; transition: color .2s; }
+footer a:hover { color: var(--gold); }
+.footer-right { display: flex; gap: 24px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .masthead, .hero, .two-col > *, .arch-section, .stack-section, footer { padding-left: 24px; padding-right: 24px; }
+  .hero-body { flex-direction: column; gap: 32px; align-items: flex-start; }
+  .two-col { grid-template-columns: 1fr; }
+  .two-col > *:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+  .hero-title { letter-spacing: -2px; }
+  .diag-row { flex-direction: column; }
+  .diag-arrow { transform: rotate(90deg); height: 24px; width: 100%; }
+  .pipeline-strip { flex-direction: column; }
+  .pipe-step::after { display: none; }
+  footer { flex-direction: column; gap: 16px; text-align: center; }
+  .footer-right { flex-wrap: wrap; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── MASTHEAD ── -->
+<header class="masthead">
+  <div class="masthead-left">
+    <span>LEWIS STONE</span>
+    <div class="status-pill">
+      <div class="pulse"></div>
+      SYSTEM ACTIVE
+    </div>
+  </div>
+  <div class="masthead-right">
+    <a href="https://github.com/stolenwise/librarian-agent" target="_blank">GitHub ↗</a>
+  </div>
+</header>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-eyebrow">Portfolio Project &nbsp;·&nbsp; Autonomous Agent</div>
+  <h1 class="hero-title">The<br><em>Librarian</em><br>Agent</h1>
+  <p class="hero-subtitle">A machine that reads so you don't have to miss a thing.</p>
+  <div class="hero-body">
+    <p class="hero-desc">
+      An autonomous system that discovers, downloads, catalogues, and organises
+      public domain books around the clock — driven by the St. John's College
+      Great Books canon. Zero human intervention. Runs forever.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-gold" href="https://github.com/stolenwise/librarian-agent" target="_blank">
+        View Source
+      </a>
+      <a class="btn btn-ghost" href="#architecture">Architecture ↓</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── TICKER ── -->
+<div class="ticker">
+  <div class="ticker-item">
+    <span class="ticker-num">251</span>
+    <span class="ticker-label">Canon Works</span>
+  </div>
+  <div class="ticker-sep"></div>
+  <div class="ticker-item">
+    <span class="ticker-num">15 / hr</span>
+    <span class="ticker-label">Books Queued</span>
+  </div>
+  <div class="ticker-sep"></div>
+  <div class="ticker-item">
+    <span class="ticker-num">3</span>
+    <span class="ticker-label">Source APIs</span>
+  </div>
+  <div class="ticker-sep"></div>
+  <div class="ticker-item">
+    <span class="ticker-num">24 / 7</span>
+    <span class="ticker-label">Operation</span>
+  </div>
+  <div class="ticker-sep"></div>
+  <div class="ticker-item">
+    <span class="ticker-num">500 GB</span>
+    <span class="ticker-label">Storage Cap</span>
+  </div>
+  <div class="ticker-sep"></div>
+  <div class="ticker-item">
+    <span class="ticker-num">85%</span>
+    <span class="ticker-label">Fuzzy Match Threshold</span>
+  </div>
+</div>
+
+<!-- ── TWO-COL ── -->
+<div class="two-col">
+  <div>
+    <div class="col-label">What it does</div>
+    <h2 class="col-heading">An autonomous library<br>that <em>builds itself</em></h2>
+    <div class="col-body">
+      <p>Feed it a reading list. Walk away. Come back to a hard drive full of organised, catalogued, deduplicated books — sourced from Project Gutenberg, Internet Archive, and Open Library simultaneously.</p>
+      <p>The canon queue drip-feeds 15 works per hour into a SQLite want-list. The agent picks them up, finds them across three APIs, validates the download, runs local AI analysis via Ollama, and files them away by era and subject.</p>
+    </div>
+  </div>
+  <div>
+    <div class="col-label">Capabilities</div>
+    <ul class="cap-list">
+      <li><span class="cap-num">01</span>Multi-source parallel search across Gutenberg, Archive.org &amp; Open Library</li>
+      <li><span class="cap-num">02</span>SHA-256 deduplication with 85% fuzzy match threshold</li>
+      <li><span class="cap-num">03</span>Local Ollama (mistral:7b) metadata analysis &amp; categorisation</li>
+      <li><span class="cap-num">04</span>Organised file system — <code style="font-family:'JetBrains Mono';font-size:12px;color:#7A5E38;">great-books/{era}/{title}.epub</code></li>
+      <li><span class="cap-num">05</span>Four n8n automation workflows + systemd 24/7 service</li>
+      <li><span class="cap-num">06</span>Discord progress embeds &amp; failure alerts</li>
+      <li><span class="cap-num">07</span>Exponential backoff retry — 5 s → 15 s → 60 s</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ── ARCHITECTURE ── -->
+<section class="arch-section" id="architecture">
+  <div class="arch-header">
+    <h2 class="arch-heading">System <em>Architecture</em></h2>
+    <span class="arch-desc-inline">251 works · 15/hr · St. John's Great Books Canon</span>
+  </div>
+
+  <!-- INPUT LAYER -->
+  <div class="diag-block">
+    <div class="diag-block-title" style="color:#8A5C2A;">01 — Input Layer</div>
+    <div class="diag-row">
+      <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+        <div class="diag-node nd-amber">
+          <div class="dn-label">Source File</div>
+          <div class="dn-name">ST_JOHNS_GREAT_BOOKS_CANON.txt</div>
+          <div class="dn-detail">251 works · Ancient → 20th Century</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:0 16px;">
+          <div style="width:1px;height:16px;background:var(--border2);margin-left:12px;"></div>
+          <span style="font-family:'JetBrains Mono';font-size:9px;color:var(--muted);">15 works / hour</span>
+        </div>
+        <div class="diag-node nd-amber">
+          <div class="dn-label">Scheduler Script</div>
+          <div class="dn-name">librarian-canon-scheduler.py</div>
+          <div class="dn-detail">Tracks index · Persists progress · Batches to DB</div>
+        </div>
+      </div>
+      <div class="diag-arrow">→</div>
+      <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+        <div class="diag-node nd-purple">
+          <div class="dn-label">SQLite Database</div>
+          <div class="dn-name">librarian_want_list</div>
+          <div class="dn-detail">status: pending → acquired · priority · category</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:0 16px;">
+          <div style="width:1px;height:16px;background:var(--border2);margin-left:12px;"></div>
+          <span style="font-family:'JetBrains Mono';font-size:9px;color:var(--muted);">monitored</span>
+        </div>
+        <div class="diag-node nd-purple">
+          <div class="dn-label">n8n Workflow</div>
+          <div class="dn-name">Want List Monitor</div>
+          <div class="dn-detail">Triggers download on new pending entries</div>
+        </div>
+      </div>
+      <div class="diag-arrow">→</div>
+      <div style="flex:.7; display:flex; flex-direction:column; gap:8px;">
+        <div class="diag-node nd-slate">
+          <div class="dn-label">CLI</div>
+          <div class="dn-name">librarian-cli.py</div>
+          <div class="dn-detail">--search · --add-want · --status</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:0 16px;">
+          <div style="width:1px;height:16px;background:var(--border2);margin-left:12px;"></div>
+        </div>
+        <div class="diag-node nd-slate">
+          <div class="dn-label">n8n Manual Trigger</div>
+          <div class="dn-name">Manual Search</div>
+          <div class="dn-detail">On-demand</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PIPELINE -->
+  <div class="diag-block">
+    <div class="diag-block-title" style="color:#3A6A9E;">02 — Agent Pipeline &nbsp;·&nbsp; librarian-agent.py</div>
+    <div class="pipeline-strip">
+      <div class="pipe-step">
+        <div class="pipe-num">01 / DISCOVER</div>
+        <div class="pipe-name">Multi-Source Search</div>
+        <div class="pipe-detail">3 APIs in parallel · Rate-limited</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-num">02 / VALIDATE</div>
+        <div class="pipe-name">Integrity Check</div>
+        <div class="pipe-detail">SHA-256 dedup · Fuzzy 85%</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-num">03 / CATALOGUE</div>
+        <div class="pipe-name">Ollama Analysis</div>
+        <div class="pipe-detail">mistral:7b · metadata + category</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-num">04 / STORE</div>
+        <div class="pipe-name">Write to Disk</div>
+        <div class="pipe-detail">great-books/{era}/{title}.epub</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-num">05 / RECOVER</div>
+        <div class="pipe-name">Retry Logic</div>
+        <div class="pipe-detail">3× · 5 s → 15 s → 60 s backoff</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOURCES + OUTPUTS -->
+  <div class="diag-row" style="gap:16px;">
+    <div style="flex:1;">
+      <div class="diag-block" style="margin-bottom:0;height:100%;">
+        <div class="diag-block-title" style="color:#2A7A6A;">03 — Discovery Sources</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="diag-node nd-teal">
+            <div class="dn-label">Project Gutenberg</div>
+            <div class="dn-name">gutendex.com/books</div>
+            <div class="dn-detail">70,000+ books · 1 s rate limit · PDF preferred</div>
+          </div>
+          <div class="diag-node nd-teal">
+            <div class="dn-label">Internet Archive</div>
+            <div class="dn-name">archive.org/advancedsearch</div>
+            <div class="dn-detail">Full-text search · 2 s rate limit</div>
+          </div>
+          <div class="diag-node nd-teal">
+            <div class="dn-label">Open Library</div>
+            <div class="dn-name">openlibrary.org/api/search</div>
+            <div class="dn-detail">Comprehensive catalog · 1.5 s rate limit</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="flex:1.4;">
+      <div class="diag-block" style="margin-bottom:0;height:100%;">
+        <div class="diag-block-title" style="color:#3A7A3A;">04 — Outputs &amp; Monitoring</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="diag-node nd-green">
+            <div class="dn-label">Private Library · Disk</div>
+            <div class="dn-name">great-books/{era}/{title}_{author}.epub</div>
+            <div class="dn-detail">ancient · medieval · renaissance · enlightenment · 19th-century · 20th-century · poetry · theology · science · music · history</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <div class="diag-node nd-green" style="flex:1;">
+              <div class="dn-label">State File</div>
+              <div class="dn-name">librarian-state.json</div>
+              <div class="dn-detail">SHA-256 hashes · 500 GB cap</div>
+            </div>
+            <div class="diag-node nd-rose" style="flex:1;">
+              <div class="dn-label">Discord</div>
+              <div class="dn-name">#librarian channel</div>
+              <div class="dn-detail">Hourly progress · Failure alerts</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTOMATION -->
+  <div class="diag-block" style="margin-top:16px;margin-bottom:0;">
+    <div class="diag-block-title" style="color:#4A4038;">05 — Automation Layer</div>
+    <div class="diag-row">
+      <div class="diag-node nd-slate">
+        <div class="dn-label">systemd Service</div>
+        <div class="dn-name">aegis-librarian.service</div>
+        <div class="dn-detail">24/7 · auto-restart · graceful shutdown</div>
+      </div>
+      <div class="diag-arrow">·</div>
+      <div class="diag-node nd-slate">
+        <div class="dn-label">n8n · Daily</div>
+        <div class="dn-name">Daily Acquisition</div>
+        <div class="dn-detail">2:00 AM · max 20 books/cycle</div>
+      </div>
+      <div class="diag-arrow">·</div>
+      <div class="diag-node nd-amber">
+        <div class="dn-label">n8n · Hourly</div>
+        <div class="dn-name">Canon Queue</div>
+        <div class="dn-detail">Every 60 min · Discord embed</div>
+      </div>
+      <div class="diag-arrow">·</div>
+      <div class="diag-node nd-slate">
+        <div class="dn-label">n8n · Reactive</div>
+        <div class="dn-name">Want List Monitor</div>
+        <div class="dn-detail">Triggers on new DB entry</div>
+      </div>
+      <div class="diag-arrow">·</div>
+      <div class="diag-node nd-slate">
+        <div class="dn-label">n8n · On-Demand</div>
+        <div class="dn-name">Manual Search</div>
+        <div class="dn-detail">CLI or n8n trigger</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── STACK ── -->
+<section class="stack-section">
+  <div class="col-label">Tech Stack</div>
+  <div class="stack-grid">
+    <span class="stack-tag">Python 3</span>
+    <span class="stack-tag">SQLite</span>
+    <span class="stack-tag">n8n</span>
+    <span class="stack-tag">systemd</span>
+    <span class="stack-tag">Ollama</span>
+    <span class="stack-tag">mistral:7b</span>
+    <span class="stack-tag">Project Gutenberg API</span>
+    <span class="stack-tag">Internet Archive API</span>
+    <span class="stack-tag">Open Library API</span>
+    <span class="stack-tag">Discord Webhooks</span>
+    <span class="stack-tag">SHA-256</span>
+    <span class="stack-tag">Exponential Backoff</span>
+    <span class="stack-tag">St. John's Great Books Canon</span>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span>Lewis Stone &nbsp;·&nbsp; 2026</span>
+  <div class="footer-right">
+    <a href="https://github.com/stolenwise/librarian-agent" target="_blank">stolenwise/librarian-agent ↗</a>
+  </div>
+</footer>
+
+</body>
+</html>
