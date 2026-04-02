@@ -1,0 +1,184 @@
+{
+  "name": "LIBRARIAN - Daily Acquisition (Fixed)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "days": 1
+            }
+          ]
+        }
+      },
+      "id": "schedule_trigger",
+      "name": "Schedule Trigger (2 AM UTC)",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT * FROM librarian_want_list WHERE status = 'pending' ORDER BY priority DESC LIMIT 20"
+      },
+      "id": "query_want_list",
+      "name": "Query Want List",
+      "type": "n8n-nodes-base.sqlite",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "javaScriptCode": "// Process each want list item\nconst items = Array.isArray($json) ? $json : [$json];\nreturn items.map(item => ({json: item}));"
+      },
+      "id": "prepare_items",
+      "name": "Prepare Items for Processing",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://gutendex.com/books?search={{$json.search_query | encodeURIComponent}}",
+        "options": {"timeout": 30000}
+      },
+      "id": "search_gutenberg",
+      "name": "Search Gutenberg",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [850, 150]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://openlibrary.org/api/search.json?title={{$json.search_query | encodeURIComponent}}&limit=5",
+        "options": {"timeout": 30000}
+      },
+      "id": "search_openlibrary",
+      "name": "Search Open Library",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [850, 350]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://archive.org/advancedsearch.php?q=title:{{$json.search_query | encodeURIComponent}}&fl=title,creator,identifier,format&output=json&rows=5",
+        "options": {"timeout": 30000}
+      },
+      "id": "search_archive",
+      "name": "Search Internet Archive",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [850, 550]
+    },
+    {
+      "parameters": {
+        "javaScriptCode": "// Aggregate and rank results\nconst gutenberg = $input.getByIndex(0)?.json?.results || [];\nconst openlibrary = $input.getByIndex(1)?.json?.docs || [];\nconst archive = $input.getByIndex(2)?.json?.response?.docs || [];\n\nconst query = $json.search_query.toLowerCase();\n\nconst candidates = [\n  ...gutenberg.map(book => ({\n    title: book.title,\n    author: book.authors?.[0]?.name || 'Unknown',\n    source: 'gutenberg',\n    source_url: book.cover_image || '',\n    formats: book.formats,\n    confidence: 0.9\n  })),\n  ...openlibrary.map(book => ({\n    title: book.title,\n    author: book.author_name?.[0] || 'Unknown',\n    source: 'openlibrary',\n    source_url: book.key || '',\n    confidence: 0.7\n  })),\n  ...archive.map(book => ({\n    title: book.title,\n    author: book.creator ? (Array.isArray(book.creator) ? book.creator[0] : book.creator) : 'Unknown',\n    source: 'archive',\n    source_url: book.identifier || '',\n    confidence: 0.8\n  }))\n];\n\nconst best = candidates.sort((a, b) => b.confidence - a.confidence)[0];\n\nif (!best) {\n  return {json: {\n    found: false,\n    reason: 'no_results',\n    search_query: $json.search_query\n  }};\n}\n\nlet downloadUrl = null;\nif (best.source === 'gutenberg' && best.formats) {\n  const pdf = Object.entries(best.formats).find(([key]) => key.includes('pdf') || key.includes('epub'));\n  downloadUrl = pdf ? pdf[1] : null;\n}\n\nreturn {json: {\n  ...best,\n  found: !!downloadUrl,\n  download_url: downloadUrl,\n  category: $json.subject_category || 'Fiction'\n}};"
+      },
+      "id": "rank_results",
+      "name": "Rank & Select Best Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1050, 350]
+    },
+    {
+      "parameters": {
+        "javaScriptCode": "if (!$json.found || !$json.download_url) {\n  return {json: {\n    valid: false,\n    error: $json.reason || 'no_download_url',\n    title: $json.title || $json.search_query\n  }};\n}\n\nconst filename = `${$json.title}_${$json.author}`.replace(/[<>:\"|?*]/g, '_').substring(0, 200);\nconst category = $json.category || 'uncategorized';\nconst filepath = `/home/lewis/aegis/library/${category}/${filename}.pdf`;\n\nreturn {json: {\n  title: $json.title,\n  author: $json.author,\n  source: $json.source,\n  download_url: $json.download_url,\n  filepath: filepath,\n  category: category,\n  confidence: $json.confidence,\n  found: true\n}};"
+      },
+      "id": "prepare_download",
+      "name": "Prepare Download Path",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1250, 350]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{$json.download_url}}",
+        "options": {"timeout": 60000}
+      },
+      "id": "download_file",
+      "name": "Download File",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1450, 350],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT OR IGNORE INTO librarian_content (content_hash, title, author, source, source_url, local_file_path, file_format, subject_category, confidence_score, acquired_at) VALUES (lower(hex(randomblob(16))), '{{$json.title}}', '{{$json.author}}', '{{$json.source}}', '{{$json.source_url}}', '{{$json.filepath}}', 'pdf', '{{$json.category}}', {{$json.confidence}}, datetime('now'))"
+      },
+      "id": "sqlite_insert",
+      "name": "SQLite: Store Book",
+      "type": "n8n-nodes-base.sqlite",
+      "typeVersion": 1,
+      "position": [1650, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.DISCORD_WEBHOOK_ALERTS}}",
+        "options": {},
+        "headers": {"Content-Type": "application/json"},
+        "body": {"embeds": [{"title": "📚 Book Acquired", "description": "**{{$json.title}}** by {{$json.author}}", "fields": [{"name": "Source", "value": "{{$json.source}}", "inline": true}, {"name": "Category", "value": "{{$json.category}}", "inline": true}], "color": 5793266, "timestamp": "{{new Date().toISOString()}}"}]}
+      },
+      "id": "discord_success",
+      "name": "Discord: Success Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1850, 200],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.DISCORD_WEBHOOK_ALERTS}}",
+        "options": {},
+        "headers": {"Content-Type": "application/json"},
+        "body": {"embeds": [{"title": "❌ Book Not Found", "description": "Could not find: **{{$json.search_query}}**", "fields": [{"name": "Reason", "value": "{{$json.error || 'Unknown'}}", "inline": false}], "color": 15158332, "timestamp": "{{new Date().toISOString()}}"}]}
+      },
+      "id": "discord_failure",
+      "name": "Discord: Not Found Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1850, 450],
+      "continueOnFail": true
+    }
+  ],
+  "connections": {
+    "schedule_trigger": {
+      "main": [[{"node": "query_want_list", "type": "main", "index": 0}]]
+    },
+    "query_want_list": {
+      "main": [[{"node": "prepare_items", "type": "main", "index": 0}]]
+    },
+    "prepare_items": {
+      "main": [[{"node": "search_gutenberg", "type": "main", "index": 0}, {"node": "search_openlibrary", "type": "main", "index": 0}, {"node": "search_archive", "type": "main", "index": 0}]]
+    },
+    "search_gutenberg": {
+      "main": [[{"node": "rank_results", "type": "main", "index": 0}]]
+    },
+    "search_openlibrary": {
+      "main": [[{"node": "rank_results", "type": "main", "index": 0}]]
+    },
+    "search_archive": {
+      "main": [[{"node": "rank_results", "type": "main", "index": 0}]]
+    },
+    "rank_results": {
+      "main": [[{"node": "prepare_download", "type": "main", "index": 0}]]
+    },
+    "prepare_download": {
+      "main": [[{"node": "download_file", "type": "main", "index": 0}]]
+    },
+    "download_file": {
+      "main": [[{"node": "sqlite_insert", "type": "main", "index": 0}, {"node": "discord_success", "type": "main", "index": 0}], [{"node": "discord_failure", "type": "main", "index": 0}]]
+    },
+    "sqlite_insert": {
+      "main": [[{"node": "discord_success", "type": "main", "index": 0}]]
+    }
+  }
+}

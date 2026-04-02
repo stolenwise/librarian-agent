@@ -1,0 +1,231 @@
+{
+  "name": "LIBRARIAN - Manual Discord Search",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "librarian-search",
+        "requestMethod": "POST",
+        "options": {}
+      },
+      "id": "discord_webhook",
+      "name": "Discord Webhook: !library search",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "javaScriptCode": "// Parse Discord webhook payload to extract search query\nconst content = $json.data?.content || '';\nconst match = content.match(/!library search (.+)/i);\n\nif (!match) {\n  return {json: {\n    error: 'Invalid command format',\n    expected: '!library search [query]',\n    received: content\n  }};\n}\n\nconst query = match[1].trim();\nconst category = $json.data?.category || 'Fiction';\n\nreturn {json: {\n  search_query: query,\n  subject_category: category,\n  channel_id: $json.data?.channel_id,\n  user_id: $json.data?.user_id,\n  timestamp: new Date().toISOString()\n}};"
+      },
+      "id": "parse_command",
+      "name": "Parse Discord Command",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://gutendex.com/books?search={{$json.search_query | encodeURIComponent}}",
+        "options": {}
+      },
+      "id": "search_gutenberg",
+      "name": "Search Gutenberg",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        650,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://openlibrary.org/api/search.json?title={{$json.search_query | encodeURIComponent}}&limit=5",
+        "options": {}
+      },
+      "id": "search_openlibrary",
+      "name": "Search Open Library",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        650,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://archive.org/advancedsearch.php?q=title:{{$json.search_query | encodeURIComponent}}&fl=title,creator,identifier&output=json&rows=5",
+        "options": {}
+      },
+      "id": "search_archive",
+      "name": "Search Internet Archive",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        650,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "javaScriptCode": "// Aggregate and rank search results\nconst gutenberg = $input.getByIndex(0)?.json?.results || [];\nconst openlibrary = $input.getByIndex(1)?.json?.docs || [];\nconst archive = $input.getByIndex(2)?.json?.response?.docs || [];\n\nconst query = $json.search_query.toLowerCase();\n\nconst candidates = [\n  ...gutenberg.slice(0, 3).map(book => ({\n    title: book.title,\n    author: book.authors?.[0]?.name || 'Unknown',\n    source: 'Gutenberg',\n    source_url: book.cover_image,\n    confidence: 0.9\n  })),\n  ...openlibrary.slice(0, 3).map(book => ({\n    title: book.title,\n    author: book.author_name?.[0] || 'Unknown',\n    source: 'Open Library',\n    source_url: book.key,\n    confidence: 0.7\n  })),\n  ...archive.slice(0, 3).map(book => ({\n    title: book.title,\n    author: book.creator ? (Array.isArray(book.creator) ? book.creator[0] : book.creator) : 'Unknown',\n    source: 'Internet Archive',\n    source_url: book.identifier,\n    confidence: 0.8\n  }))\n];\n\nconst results = candidates.sort((a, b) => b.confidence - a.confidence).slice(0, 5);\n\nreturn {json: {\n  search_query: $json.search_query,\n  total_results: results.length,\n  results: results,\n  channel_id: $json.channel_id\n}};"
+      },
+      "id": "aggregate_results",
+      "name": "Aggregate & Rank Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        850,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "javaScriptCode": "// Format results for Discord message\nconst results = $json.results;\nconst query = $json.search_query;\n\nlet description = '';\nif (results.length === 0) {\n  description = `No results found for \"${query}\"`;\n} else {\n  description = `Found ${results.length} results for \"${query}\":\\n\\n`;\n  results.forEach((book, idx) => {\n    description += `**${idx + 1}. ${book.title}**\\n`;\n    description += `   Author: ${book.author}\\n`;\n    description += `   Source: ${book.source}\\n\\n`;\n  });\n}\n\nreturn {json: {\n  discord_response: {\n    embeds: [{\n      title: '🔍 Book Search Results',\n      description: description,\n      color: 5793266,\n      timestamp: new Date().toISOString()\n    }]\n  },\n  channel_id: $json.channel_id\n}};"
+      },
+      "id": "format_discord",
+      "name": "Format Discord Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1050,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.DISCORD_WEBHOOK_LIBRARIAN}}",
+        "options": {},
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": "={{$json.discord_response}}"
+      },
+      "id": "post_discord",
+      "name": "Post to Discord",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1250,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO librarian_search_history (query, source, results_found, last_searched_at) VALUES ('{{$json.search_query}}', 'discord', {{$json.total_results}}, datetime('now')) ON CONFLICT(query) DO UPDATE SET last_searched_at = datetime('now'), results_found = {{$json.total_results}}"
+      },
+      "id": "log_search",
+      "name": "Log Search History",
+      "type": "n8n-nodes-base.sqlite",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        500
+      ]
+    }
+  ],
+  "connections": {
+    "discord_webhook": {
+      "main": [
+        [
+          {
+            "node": "parse_command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "parse_command": {
+      "main": [
+        [
+          {
+            "node": "search_gutenberg",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "search_openlibrary",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "search_archive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "search_gutenberg": {
+      "main": [
+        [
+          {
+            "node": "aggregate_results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "search_openlibrary": {
+      "main": [
+        [
+          {
+            "node": "aggregate_results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "search_archive": {
+      "main": [
+        [
+          {
+            "node": "aggregate_results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "aggregate_results": {
+      "main": [
+        [
+          {
+            "node": "format_discord",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "log_search",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "format_discord": {
+      "main": [
+        [
+          {
+            "node": "post_discord",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

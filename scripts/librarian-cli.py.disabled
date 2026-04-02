@@ -1,0 +1,230 @@
+#!/usr/bin/env python3
+"""
+LIBRARIAN CLI - Command line interface for library management
+"""
+
+import sqlite3
+import json
+import os
+import sys
+import argparse
+from datetime import datetime
+from pathlib import Path
+
+class LibrarianCLI:
+    def __init__(self):
+        self.db_path = "/home/lewis/aegis/data/sentinel.db"
+        self.library_path = "/home/lewis/aegis/library"
+
+    def get_db(self):
+        return sqlite3.connect(self.db_path)
+
+    def add_want_item(self, query, category, priority):
+        """Add item to want list"""
+        db = self.get_db()
+        cursor = db.cursor()
+
+        priority_map = {'critical': 5, 'high': 4, 'normal': 3, 'low': 2}
+        priority_val = priority_map.get(priority.lower(), 3)
+
+        try:
+            cursor.execute("""
+                INSERT INTO librarian_want_list
+                (search_query, subject_category, priority, status, created_at)
+                VALUES (?, ?, ?, 'pending', datetime('now'))
+            """, (query, category, priority_val))
+            db.commit()
+            print(f"✅ Added to Want List: {query}")
+            print(f"   Category: {category}, Priority: {priority}")
+        except Exception as e:
+            print(f"❌ Error: {e}")
+        finally:
+            db.close()
+
+    def list_want_items(self):
+        """List all want list items"""
+        db = self.get_db()
+        cursor = db.cursor()
+
+        cursor.execute("""
+            SELECT search_query, subject_category, priority, status
+            FROM librarian_want_list
+            ORDER BY priority DESC, created_at DESC
+        """)
+
+        items = cursor.fetchall()
+        if items:
+            print(f"\n📋 WANT LIST ({len(items)} items)\n")
+            for query, cat, pri, status in items:
+                priority_name = ['Low', 'Normal', 'High', 'Critical', 'Critical'][pri - 1]
+                status_icon = {'pending': '⏳', 'acquired': '✅', 'not_found': '❌', 'in_progress': '🔄'}.get(status, '❓')
+                print(f"  {status_icon} {query}")
+                print(f"     Category: {cat} | Priority: {priority_name}")
+        else:
+            print("Want list is empty")
+
+        db.close()
+
+    def list_books(self):
+        """List acquired books"""
+        db = self.get_db()
+        cursor = db.cursor()
+
+        cursor.execute("""
+            SELECT title, author, subject_category, acquired_at
+            FROM librarian_content
+            ORDER BY acquired_at DESC
+        """)
+
+        books = cursor.fetchall()
+        if books:
+            print(f"\n📚 LIBRARY ({len(books)} books)\n")
+            for title, author, cat, timestamp in books:
+                print(f"  📖 {title}")
+                print(f"     by {author} ({cat})")
+                print(f"     Added: {timestamp[:10]}")
+        else:
+            print("Library is empty")
+
+        db.close()
+
+    def get_stats(self):
+        """Get library statistics"""
+        db = self.get_db()
+        cursor = db.cursor()
+
+        cursor.execute("SELECT COUNT(*) FROM librarian_content")
+        total_books = cursor.fetchone()[0]
+
+        cursor.execute("SELECT SUM(file_size_bytes) FROM librarian_content")
+        total_size = cursor.fetchone()[0] or 0
+
+        cursor.execute("""
+            SELECT subject_category, COUNT(*) as count
+            FROM librarian_content
+            GROUP BY subject_category
+            ORDER BY count DESC
+        """)
+        categories = cursor.fetchall()
+
+        cursor.execute("SELECT COUNT(*) FROM librarian_want_list WHERE status='pending'")
+        pending_items = cursor.fetchone()[0]
+
+        print(f"\n📊 LIBRARY STATISTICS\n")
+        print(f"  Total Books:        {total_books}")
+        print(f"  Storage Used:       {total_size / (1024**2):.1f} MB")
+        print(f"  Pending Wants:      {pending_items}")
+
+        if categories:
+            print(f"\n  Books by Category:")
+            for cat, count in categories:
+                print(f"    • {cat}: {count}")
+
+        db.close()
+
+    def clear_pending(self):
+        """Clear all pending want list items"""
+        db = self.get_db()
+        cursor = db.cursor()
+
+        cursor.execute("SELECT COUNT(*) FROM librarian_want_list WHERE status='pending'")
+        count = cursor.fetchone()[0]
+
+        if count > 0:
+            response = input(f"Delete {count} pending items? (yes/no): ")
+            if response.lower() == 'yes':
+                cursor.execute("DELETE FROM librarian_want_list WHERE status='pending'")
+                db.commit()
+                print(f"✅ Deleted {count} items")
+            else:
+                print("Cancelled")
+        else:
+            print("No pending items")
+
+        db.close()
+
+    def remove_item(self, query):
+        """Remove a specific want list item"""
+        db = self.get_db()
+        cursor = db.cursor()
+
+        cursor.execute("DELETE FROM librarian_want_list WHERE search_query=?", (query,))
+        db.commit()
+
+        if cursor.rowcount > 0:
+            print(f"✅ Removed: {query}")
+        else:
+            print(f"❌ Not found: {query}")
+
+        db.close()
+
+    def search_library(self, term):
+        """Search library"""
+        db = self.get_db()
+        cursor = db.cursor()
+
+        cursor.execute("""
+            SELECT title, author, subject_category
+            FROM librarian_content
+            WHERE title LIKE ? OR author LIKE ?
+        """, (f"%{term}%", f"%{term}%"))
+
+        books = cursor.fetchall()
+        if books:
+            print(f"\n🔍 Search Results: {term}\n")
+            for title, author, cat in books:
+                print(f"  • {title} by {author} ({cat})")
+        else:
+            print(f"No results for: {term}")
+
+        db.close()
+
+def main():
+    parser = argparse.ArgumentParser(description='LIBRARIAN CLI - Library Management')
+    subparsers = parser.add_subparsers(dest='command', help='Commands')
+
+    # Add want list item
+    add_parser = subparsers.add_parser('add', help='Add item to want list')
+    add_parser.add_argument('query', help='Book title or author')
+    add_parser.add_argument('-c', '--category', default='Fiction', help='Category')
+    add_parser.add_argument('-p', '--priority', default='normal', help='Priority (critical/high/normal/low)')
+
+    # List commands
+    subparsers.add_parser('wants', help='List want list items')
+    subparsers.add_parser('books', help='List acquired books')
+    subparsers.add_parser('stats', help='Show statistics')
+
+    # Search
+    search_parser = subparsers.add_parser('search', help='Search library')
+    search_parser.add_argument('term', help='Search term')
+
+    # Remove
+    remove_parser = subparsers.add_parser('remove', help='Remove want list item')
+    remove_parser.add_argument('query', help='Item to remove')
+
+    # Clear
+    subparsers.add_parser('clear', help='Clear all pending items')
+
+    args = parser.parse_args()
+
+    cli = LibrarianCLI()
+
+    if args.command == 'add':
+        cli.add_want_item(args.query, args.category, args.priority)
+    elif args.command == 'wants':
+        cli.list_want_items()
+    elif args.command == 'books':
+        cli.list_books()
+    elif args.command == 'stats':
+        cli.get_stats()
+    elif args.command == 'search':
+        cli.search_library(args.term)
+    elif args.command == 'remove':
+        cli.remove_item(args.query)
+    elif args.command == 'clear':
+        cli.clear_pending()
+    else:
+        parser.print_help()
+
+if __name__ == "__main__":
+    main()

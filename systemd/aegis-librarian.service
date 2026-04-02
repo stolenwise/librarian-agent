@@ -1,0 +1,29 @@
+[Unit]
+Description=AEGIS LIBRARIAN - Autonomous Book Discovery & Library Builder
+Documentation=https://github.com/anthropics/aegis
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=lewis
+WorkingDirectory=/home/lewis/aegis
+Environment="AEGIS_HOME=/home/lewis/aegis"
+Environment="LIBRARIAN_PATH=/home/lewis/aegis/library"
+ExecStart=/usr/bin/python3 /home/lewis/aegis/scripts/librarian-agent.py
+Restart=always
+RestartSec=60
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=aegis-librarian
+
+# Resource limits
+MemoryLimit=512M
+CPUQuota=50%
+
+# Security
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

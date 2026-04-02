@@ -1,0 +1,373 @@
+#!/usr/bin/env python3
+"""
+LIBRARIAN Hourly Download - Downloads 15 books every hour into Private Library
+Uses: Project Gutenberg, Standard Ebooks, feedbooks, public domain sources
+"""
+
+import json
+import subprocess
+import os
+import re
+from datetime import datetime
+from pathlib import Path
+import time
+
+CANON_FILE = "/home/lewis/Desktop/Private Library/ST_JOHNS_GREAT_BOOKS_CANON.txt"
+CONFIG_FILE = "/home/lewis/aegis/config/librarian-canon-schedule.json"
+LOG_FILE = "/home/lewis/aegis/logs/canon-scheduler.log"
+LIBRARY_PATH = "/home/lewis/Desktop/Private Library"
+
+# Load Discord webhook from env
+DISCORD_WEBHOOK = None
+try:
+    with open('/home/lewis/aegis/config/.env') as f:
+        for line in f:
+            if line.startswith('DISCORD_WEBHOOK_LIBRARIAN='):
+                DISCORD_WEBHOOK = line.split('=', 1)[1].strip()
+                break
+except:
+    pass
+
+CATEGORY_MAP = {
+    # Content type (highest priority - check these first)
+    "POETRY": "Poetry", "DRAMATIC": "Plays", "LITERATURE": "Fiction",
+    "ROMAN": "Fiction", "RENAISSANCE": "Fiction", "ROMANTICISM": "Fiction",
+    "MODERNISM": "Fiction",
+    # Philosophy scholars/works
+    "GREEK": "Philosophy", "PLATO": "Philosophy", "ARISTOTLE": "Philosophy",
+    "ENLIGHTENMENT": "Philosophy", "ETHICS": "Philosophy", "ESSAYS": "Philosophy",
+    "PHILOSOPHY": "Philosophy",
+    # Theology/Religion
+    "SACRED": "Theology", "CHRISTIAN": "Theology", "REFORMATION": "Theology",
+    "SCHOLASTIC": "Theology", "MYSTICISM": "Theology",
+    # History & Politics
+    "HISTORY": "Politics", "SCIENCE": "Politics", "POLITICAL": "Politics",
+}
+
+# Known direct URLs for canonical books (Gutenberg EPUB/PDF files ONLY - NO HTML/TXT)
+KNOWN_BOOKS = {
+    "Pride and Prejudice": "https://www.gutenberg.org/cache/epub/1342/pg1342.epub",
+    "Jane Eyre": "https://www.gutenberg.org/cache/epub/1260/pg1260.epub",
+    "Wuthering Heights": "https://www.gutenberg.org/cache/epub/768/pg768.epub",
+    "Moby Dick": "https://www.gutenberg.org/cache/epub/2701/pg2701.epub",
+    "Hamlet": "https://www.gutenberg.org/cache/epub/1524/pg1524.epub",
+    "Macbeth": "https://www.gutenberg.org/cache/epub/2264/pg2264.epub",
+    "Paradise Lost": "https://www.gutenberg.org/cache/epub/20/pg20.epub",
+    "Divine Comedy": "https://www.gutenberg.org/cache/epub/8800/pg8800.epub",
+    "Republic": "https://www.gutenberg.org/cache/epub/1497/pg1497.epub",
+    "Confessions": "https://www.gutenberg.org/cache/epub/3296/pg3296.epub",
+    "Meditations": "https://www.gutenberg.org/cache/epub/2680/pg2680.epub",
+    "Odyssey": "https://www.gutenberg.org/cache/epub/1727/pg1727.epub",
+    "Iliad": "https://www.gutenberg.org/cache/epub/6150/pg6150.epub",
+    "Crime and Punishment": "https://www.gutenberg.org/cache/epub/2554/pg2554.epub",
+    "Anna Karenina": "https://www.gutenberg.org/cache/epub/1399/pg1399.epub",
+    "Sense and Sensibility": "https://www.gutenberg.org/cache/epub/161/pg161.epub",
+    "Emma": "https://www.gutenberg.org/cache/epub/158/pg158.epub",
+    "Northanger Abbey": "https://www.gutenberg.org/cache/epub/121/pg121.epub",
+    "Persuasion": "https://www.gutenberg.org/cache/epub/105/pg105.epub",
+    "Mansfield Park": "https://www.gutenberg.org/cache/epub/141/pg141.epub",
+    "Great Expectations": "https://www.gutenberg.org/cache/epub/1661/pg1661.epub",
+    "Bleak House": "https://www.gutenberg.org/cache/epub/1023/pg1023.epub",
+    "David Copperfield": "https://www.gutenberg.org/cache/epub/766/pg766.epub",
+    "Oliver Twist": "https://www.gutenberg.org/cache/epub/730/pg730.epub",
+    "Vanity Fair": "https://www.gutenberg.org/cache/epub/599/pg599.epub",
+    "Middlemarch": "https://www.gutenberg.org/cache/epub/145/pg145.epub",
+    "The Mill on the Floss": "https://www.gutenberg.org/cache/epub/460/pg460.epub",
+    "Silas Marner": "https://www.gutenberg.org/cache/epub/550/pg550.epub",
+    "Robinson Crusoe": "https://www.gutenberg.org/cache/epub/521/pg521.epub",
+    "Gulliver's Travels": "https://www.gutenberg.org/cache/epub/829/pg829.epub",
+    "A Tale of Two Cities": "https://www.gutenberg.org/cache/epub/98/pg98.epub",
+    "The Count of Monte Cristo": "https://www.gutenberg.org/cache/epub/1184/pg1184.epub",
+    "The Three Musketeers": "https://www.gutenberg.org/cache/epub/1257/pg1257.epub",
+    "Les Misérables": "https://www.gutenberg.org/cache/epub/17489/pg17489.epub",
+    "Hunchback of Notre-Dame": "https://www.gutenberg.org/cache/epub/2610/pg2610.epub",
+    "Don Quixote": "https://www.gutenberg.org/cache/epub/2000/pg2000.epub",
+    "The Odyssey": "https://www.gutenberg.org/cache/epub/1727/pg1727.epub",
+    "The Iliad": "https://www.gutenberg.org/cache/epub/6150/pg6150.epub",
+    "Beowulf": "https://www.gutenberg.org/cache/epub/16328/pg16328.epub",
+    "Canterbury Tales": "https://www.gutenberg.org/cache/epub/2383/pg2383.epub",
+    "Paradise Lost": "https://www.gutenberg.org/cache/epub/20/pg20.epub",
+    "The Faerie Queene": "https://www.gutenberg.org/cache/epub/3382/pg3382.epub",
+}
+
+def log(msg):
+    ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]
+    with open(LOG_FILE, 'a') as f:
+        f.write(f"{ts} [INFO] {msg}\n")
+    print(msg)
+
+def post_to_discord(title, author, category):
+    """Post individual book download to Discord #librarian"""
+    if not DISCORD_WEBHOOK:
+        return
+
+    try:
+        payload = {
+            'embeds': [{
+                'title': '📚 Book Downloaded',
+                'description': f'**{title}** by {author}',
+                'fields': [
+                    {'name': '📁 Category', 'value': category, 'inline': True},
+                    {'name': '⏱️ Time', 'value': datetime.now().strftime('%I:%M %p'), 'inline': True}
+                ],
+                'color': 3066993
+            }]
+        }
+        subprocess.run(
+            ['curl', '-s', '-X', 'POST', DISCORD_WEBHOOK,
+             '-H', 'Content-Type: application/json',
+             '-d', json.dumps(payload)],
+            timeout=5, capture_output=True
+        )
+    except:
+        pass
+
+def post_not_found_to_discord(title, author):
+    """Post book not found notification to Discord #librarian"""
+    if not DISCORD_WEBHOOK:
+        return
+
+    try:
+        payload = {
+            'embeds': [{
+                'title': '❌ Book Not Found (PDF/EPUB)',
+                'description': f'**{title}** by {author}',
+                'fields': [
+                    {'name': '📝 Note', 'value': 'Not available in PDF or EPUB format', 'inline': False},
+                    {'name': '⏱️ Time', 'value': datetime.now().strftime('%I:%M %p'), 'inline': True}
+                ],
+                'color': 15158332
+            }]
+        }
+        subprocess.run(
+            ['curl', '-s', '-X', 'POST', DISCORD_WEBHOOK,
+             '-H', 'Content-Type: application/json',
+             '-d', json.dumps(payload)],
+            timeout=5, capture_output=True
+        )
+    except:
+        pass
+
+def parse_canon():
+    """Parse canon file"""
+    books = []
+    current_category = "Unsorted"
+    prev_was_equals = False
+
+    with open(CANON_FILE, 'r', encoding='utf-8') as f:
+        for line in f:
+            line = line.rstrip()
+
+            # Skip empty lines
+            if not line:
+                prev_was_equals = False
+                continue
+
+            # Detect section headers: line of equals = section name = line of equals
+            if line.startswith("="):
+                prev_was_equals = True
+                continue
+
+            # If previous line was equals, this is the section header
+            if prev_was_equals:
+                current_category = line
+                prev_was_equals = False
+                continue
+
+            prev_was_equals = False
+
+            # Skip indented lines (sub-entries like bullet points)
+            if line.startswith(" "):
+                continue
+
+            # Process book entries
+            if line:
+                cat_folder = "Unsorted"
+                for key, folder in CATEGORY_MAP.items():
+                    if key in current_category.upper():
+                        cat_folder = folder
+                        break
+
+                # Canon format is "Author - Title", but we need "Title - Author"
+                if " - " in line:
+                    author, title = line.split(" - ", 1)
+                else:
+                    author, title = line, "Unknown"
+
+                books.append({
+                    'title': title.strip(),
+                    'author': author.strip(),
+                    'category': cat_folder
+                })
+
+    return books
+
+def find_book_url(title, author):
+    """Find free EPUB from known legitimate sources"""
+
+    # Check KNOWN_BOOKS - these are verified working EPUB URLs from Project Gutenberg
+    title_lower = title.lower().strip()
+    author_lower = author.lower().strip()
+
+    for key, url in KNOWN_BOOKS.items():
+        key_lower = key.lower()
+        # Match on title or author name
+        if key_lower in title_lower or key_lower in author_lower or title_lower in key_lower:
+            # Only return EPUB files
+            if url.endswith('.epub'):
+                return url
+
+    # If not in KNOWN_BOOKS, return None (book not available yet)
+    return None
+
+def is_valid_pdf(filepath):
+    """Verify file is actually a PDF by checking magic bytes"""
+    try:
+        with open(filepath, 'rb') as f:
+            header = f.read(4)
+            return header.startswith(b'%PDF')
+    except:
+        return False
+
+def is_valid_epub(filepath):
+    """Verify file is actually an EPUB (ZIP format with specific structure)"""
+    try:
+        import zipfile
+        if not zipfile.is_zipfile(filepath):
+            return False
+        with zipfile.ZipFile(filepath, 'r') as zf:
+            # EPUB must contain mimetype file and container.xml
+            return 'mimetype' in zf.namelist()
+    except:
+        return False
+
+def download_book(title, author, url, filepath):
+    """Download book file - ONLY EPUB or PDF with strict validation"""
+    # Validate URL is EPUB or PDF
+    if not (url.endswith('.pdf') or url.endswith('.epub')):
+        return False
+
+    try:
+        result = subprocess.run(
+            ['curl', '-L', '-s', '-o', str(filepath), '--max-time', '15', url],
+            capture_output=True, timeout=20
+        )
+
+        if not filepath.exists():
+            return False
+
+        file_size = filepath.stat().st_size
+        if file_size < 1000:  # Too small to be a real book
+            filepath.unlink()
+            return False
+
+        # Verify actual file format by magic bytes, not extension
+        if filepath.suffix == '.pdf':
+            if is_valid_pdf(filepath):
+                return True
+            else:
+                filepath.unlink()
+                return False
+
+        elif filepath.suffix == '.epub':
+            if is_valid_epub(filepath):
+                return True
+            else:
+                filepath.unlink()
+                return False
+
+    except Exception as e:
+        if filepath.exists():
+            filepath.unlink()
+
+    return False
+
+def main():
+    log("⚙️  Starting download cycle...")
+    
+    # Load progress
+    config = {}
+    if os.path.exists(CONFIG_FILE):
+        try:
+            config = json.load(open(CONFIG_FILE))
+        except:
+            pass
+    
+    idx = config.get('download_index', 0)
+    total = config.get('total_downloaded', 0)
+    
+    # Parse books
+    books = parse_canon()
+    log(f"Loaded {len(books)} canonical books")
+    
+    if not books:
+        return
+    
+    downloaded = 0
+    not_found = 0
+
+    # Download 15 books
+    for i in range(15):
+        if idx >= len(books):
+            idx = 0
+
+        book = books[idx]
+
+        # Find and download first
+        url = find_book_url(book['title'], book['author'])
+
+        if url:
+            # Determine file extension from URL
+            if url.endswith('.pdf'):
+                ext = '.pdf'
+            elif url.endswith('.epub'):
+                ext = '.epub'
+            else:
+                # Skip if not PDF or EPUB
+                idx += 1
+                continue
+
+            # Create filepath with correct extension
+            cat_dir = Path(LIBRARY_PATH) / book['category']
+            cat_dir.mkdir(parents=True, exist_ok=True)
+
+            filename = re.sub(r'[<>:"/\\|?*]', '_', f"{book['title']}_{book['author']}")[:100]
+            filepath = cat_dir / f"{filename}{ext}"
+
+            # Skip if already exists
+            if filepath.exists():
+                idx += 1
+                continue
+
+            # Download
+            if download_book(book['title'], book['author'], url, filepath):
+                log(f"✅ {book['title'][:45]} → {book['category']}")
+                post_to_discord(book['title'], book['author'], book['category'])
+                downloaded += 1
+        else:
+            # Book not found in PDF/EPUB format
+            log(f"❌ {book['title'][:45]} - Not found (PDF/EPUB only)")
+            post_not_found_to_discord(book['title'], book['author'])
+            not_found += 1
+
+        idx += 1
+        time.sleep(0.3)
+    
+    # Save progress
+    config['download_index'] = idx
+    config['total_downloaded'] = total + downloaded
+
+    with open(CONFIG_FILE, 'w') as f:
+        json.dump(config, f, indent=2)
+
+    log(f"📥 Downloaded {downloaded}/15 books • Not found (PDF/EPUB): {not_found} • Total: {config["total_downloaded"]}/251")
+
+if __name__ == "__main__":
+    while True:
+        try:
+            main()
+            # Wait 5 seconds before next cycle
+            time.sleep(5)
+        except Exception as e:
+            log(f"❌ Error in download cycle: {e}")
+            time.sleep(10)

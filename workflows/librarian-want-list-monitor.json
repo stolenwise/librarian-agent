@@ -1,0 +1,89 @@
+{
+  "name": "LIBRARIAN - Want List Monitor",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "librarian-want-list",
+        "requestMethod": "POST",
+        "options": {}
+      },
+      "id": "notion_webhook",
+      "name": "Notion Webhook: New Want List Item",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "javaScriptCode": "const payload = $json;\nconst query = payload.database_object?.properties?.Query?.title?.[0]?.text?.content || payload.properties?.Query?.title?.[0]?.text?.content || 'unknown';\nconst category = payload.database_object?.properties?.Category?.select?.name || payload.properties?.Category?.select?.name || 'Fiction';\nconst priority = payload.database_object?.properties?.Priority?.select?.name || payload.properties?.Priority?.select?.name || 'Normal';\nconst priorityMap = { 'Critical': 5, 'High': 4, 'Normal': 3, 'Low': 2 };\nconst priorityValue = priorityMap[priority] || 3;\nreturn {json: {search_query: query, subject_category: category, priority: priorityValue, notion_page_id: payload.object?.id || payload.id || null, triggered_at: new Date().toISOString()}};"
+      },
+      "id": "parse_notion",
+      "name": "Parse Notion Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO librarian_want_list (notion_page_id, search_query, subject_category, priority, status, created_at) VALUES ('{{$json.notion_page_id}}', '{{$json.search_query}}', '{{$json.subject_category}}', {{$json.priority}}, 'pending', datetime('now'))"
+      },
+      "id": "insert_want_list",
+      "name": "SQLite: Insert Want List Item",
+      "type": "n8n-nodes-base.sqlite",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.DISCORD_WEBHOOK_LIBRARIAN}}",
+        "options": {},
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "embeds": [{
+            "title": "📝 Want List Item Queued",
+            "description": "**{{$json.search_query}}**",
+            "fields": [
+              {"name": "Category", "value": "{{$json.subject_category}}", "inline": true},
+              {"name": "Priority", "value": "{{['Low', 'Normal', 'High', 'Critical'][$json.priority - 1]}}", "inline": true},
+              {"name": "Status", "value": "⏳ Pending next acquisition cycle (2 AM UTC)", "inline": false}
+            ],
+            "color": 5793266,
+            "timestamp": "{{new Date().toISOString()}}"
+          }]
+        }
+      },
+      "id": "discord_alert",
+      "name": "Discord: Alert User",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO librarian_acquisitions (acquisition_run_id, trigger_type, status, run_started_at) VALUES ('{{$json.notion_page_id}}', 'notion_event', 'pending', datetime('now'))"
+      },
+      "id": "log_queue",
+      "name": "Log Queue Event",
+      "type": "n8n-nodes-base.sqlite",
+      "typeVersion": 1,
+      "position": [850, 450]
+    }
+  ],
+  "connections": {
+    "notion_webhook": {
+      "main": [[{"node": "parse_notion", "type": "main", "index": 0}]]
+    },
+    "parse_notion": {
+      "main": [[
+        {"node": "insert_want_list", "type": "main", "index": 0},
+        {"node": "discord_alert", "type": "main", "index": 0},
+        {"node": "log_queue", "type": "main", "index": 0}
+      ]]
+    }
+  }
+}

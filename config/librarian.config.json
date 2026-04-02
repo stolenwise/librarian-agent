@@ -1,0 +1,85 @@
+{
+  "version": "1.0",
+  "description": "LIBRARIAN \u2014 Autonomous Library Builder Configuration",
+  "sources": {
+    "gutenberg": {
+      "enabled": true,
+      "api_url": "https://gutendex.com/books",
+      "rate_limit_ms": 1000,
+      "timeout_sec": 30,
+      "preferred_format": "pdf"
+    },
+    "archive": {
+      "enabled": true,
+      "api_url": "https://archive.org/advancedsearch.php",
+      "rate_limit_ms": 2000,
+      "timeout_sec": 30
+    },
+    "openlibrary": {
+      "enabled": true,
+      "api_url": "https://openlibrary.org/api/search.json",
+      "rate_limit_ms": 1500,
+      "timeout_sec": 30
+    }
+  },
+  "processing": {
+    "ollama_host": "http://localhost:11434",
+    "ollama_model": "mistral:7b",
+    "metadata_confidence_threshold": 0.7,
+    "max_retries": 3,
+    "retry_backoff_seconds": [
+      5,
+      15,
+      60
+    ],
+    "parallel_searches": 3
+  },
+  "storage": {
+    "library_path": "/home/lewis/Desktop/Private Library",
+    "categories": [
+      "Fiction",
+      "Philosophy",
+      "Politics",
+      "Theology",
+      "Poetry",
+      "Plays",
+      "Media Ecology",
+      "Science",
+      "History",
+      "Reference",
+      "Unsorted"
+    ],
+    "file_format": "pdf",
+    "max_per_cycle": 20,
+    "storage_limit_gb": 500,
+    "storage_alert_threshold": 0.8,
+    "file_organization": "{category}/{title}_{author}.pdf"
+  },
+  "deduplication": {
+    "method": "sha256_hash",
+    "also_fuzzy_match": true,
+    "fuzzy_match_threshold": 0.85
+  },
+  "escalation": {
+    "consecutive_failures_before_alert": 3,
+    "low_confidence_escalate_to": "claude",
+    "format_error_escalate_to": "discord_alert"
+  },
+  "schedules": {
+    "daily_acquisition": "02:00",
+    "want_list_check": "on_create",
+    "manual_search": "on_demand"
+  },
+  "api_sources": {
+    "gutenberg_description": "Public domain books via Gutendex API",
+    "archive_description": "Internet Archive books and texts",
+    "openlibrary_description": "Open Library public catalog"
+  },
+  "file_naming": {
+    "pattern": "{title}_{author}",
+    "max_length": 200,
+    "invalid_chars": "<>:\"|?*",
+    "replacement_char": "_"
+  },
+  "file_organization": "{category}/{title}_{author}.pdf"
+}

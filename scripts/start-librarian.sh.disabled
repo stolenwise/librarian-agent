@@ -1,0 +1,38 @@
+#!/bin/bash
+# LIBRARIAN Service Installer & Starter
+# Run this with: bash /home/lewis/aegis/scripts/start-librarian.sh
+
+set -e
+
+echo "=========================================="
+echo "LIBRARIAN Agent Installation"
+echo "=========================================="
+
+# Check if running with sudo
+if [ "$EUID" -ne 0 ]; then
+   echo "This script needs to be run with sudo to install systemd service."
+   echo "Run: sudo bash /home/lewis/aegis/scripts/start-librarian.sh"
+   exit 1
+fi
+
+# Install service
+echo "Installing systemd service..."
+cp /home/lewis/aegis/systemd/aegis-librarian.service /etc/systemd/system/
+systemctl daemon-reload
+
+# Enable and start
+echo "Enabling service to start on boot..."
+systemctl enable aegis-librarian
+
+echo "Starting LIBRARIAN service..."
+systemctl start aegis-librarian
+
+# Check status
+sleep 2
+echo ""
+echo "Service status:"
+systemctl status aegis-librarian --no-pager || true
+
+echo ""
+echo "View logs with: journalctl -u aegis-librarian -f"
+echo "=========================================="

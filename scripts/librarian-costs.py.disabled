@@ -1,0 +1,225 @@
+#!/usr/bin/env python3
+"""
+LIBRARIAN Cost Tracking & Analytics
+Monitor spending and resource usage
+"""
+
+import sqlite3
+import json
+from datetime import datetime, timedelta
+from collections import defaultdict
+
+class LibrarianCostTracker:
+    def __init__(self):
+        self.db_path = "/home/lewis/aegis/data/sentinel.db"
+        self.costs = {
+            'claude_api': 0.015,  # $ per 1K tokens (approximate)
+            'notion': 10.0,  # $10/month
+            'storage': 0.0,  # Free (local)
+        }
+
+    def get_db(self):
+        return sqlite3.connect(self.db_path)
+
+    def estimate_api_costs(self):
+        """Estimate Claude API costs"""
+        db = self.get_db()
+        cursor = db.cursor()
+
+        # Get total acquisitions and estimate tokens
+        cursor.execute("SELECT COUNT(*) FROM librarian_acquisitions WHERE status='success'")
+        successful_runs = cursor.fetchone()[0]
+
+        # Each acquisition run uses ~5000 tokens on average (searches + processing)
+        estimated_tokens = successful_runs * 5000
+
+        # Cost estimate
+        cost_per_1k = self.costs['claude_api']
+        estimated_cost = (estimated_tokens / 1000) * cost_per_1k
+
+        return {
+            'runs': successful_runs,
+            'tokens': estimated_tokens,
+            'cost': estimated_cost
+        }
+
+    def get_monthly_costs(self):
+        """Calculate monthly costs"""
+        api_costs = self.estimate_api_costs()
+
+        monthly = {
+            'claude_api': api_costs['cost'],
+            'notion': self.costs['notion'],
+            'storage': 0.0,
+            'total': api_costs['cost'] + self.costs['notion']
+        }
+
+        return monthly
+
+    def get_storage_breakdown(self):
+        """Get storage breakdown by category"""
+        db = self.get_db()
+        cursor = db.cursor()
+
+        cursor.execute("""
+            SELECT subject_category, COUNT(*) as books, SUM(file_size_bytes) as size
+            FROM librarian_content
+            GROUP BY subject_category
+            ORDER BY size DESC
+        """)
+
+        categories = cursor.fetchall()
+
+        breakdown = []
+        for cat, count, size in categories:
+            size_mb = size / (1024**2) if size else 0
+            breakdown.append({
+                'category': cat,
+                'books': count,
+                'size_mb': size_mb,
+                'avg_size_mb': size_mb / count if count > 0 else 0
+            })
+
+        db.close()
+        return breakdown
+
+    def get_acquisition_efficiency(self):
+        """Calculate acquisition efficiency"""
+        db = self.get_db()
+        cursor = db.cursor()
+
+        # Success rate
+        cursor.execute("SELECT COUNT(*) FROM librarian_acquisitions WHERE status='success'")
+        successful = cursor.fetchone()[0]
+
+        cursor.execute("SELECT COUNT(*) FROM librarian_acquisitions")
+        total = cursor.fetchone()[0]
+
+        success_rate = (successful / total * 100) if total > 0 else 0
+
+        # Average books per run
+        cursor.execute("SELECT AVG(items_downloaded) FROM librarian_acquisitions WHERE status='success'")
+        avg_per_run = cursor.fetchone()[0] or 0
+
+        # Cost per book
+        api_costs = self.estimate_api_costs()
+        cost_per_book = api_costs['cost'] / api_costs['runs'] if api_costs['runs'] > 0 else 0
+
+        db.close()
+
+        return {
+            'success_rate': success_rate,
+            'avg_per_run': avg_per_run,
+            'cost_per_book': cost_per_book
+        }
+
+    def show_summary(self):
+        """Show cost summary"""
+        print("\n" + "="*70)
+        print("💰 LIBRARIAN COST & ANALYTICS REPORT")
+        print("="*70)
+
+        # Monthly costs
+        monthly = self.get_monthly_costs()
+        print(f"\n📊 MONTHLY COSTS")
+        print("─" * 70)
+        print(f"  Claude API:        ${monthly['claude_api']:.2f}")
+        print(f"  Notion:            ${monthly['notion']:.2f}")
+        print(f"  Storage:           ${monthly['storage']:.2f}")
+        print(f"  ─" * 35)
+        print(f"  TOTAL:             ${monthly['total']:.2f}/month")
+
+        # Efficiency metrics
+        efficiency = self.get_acquisition_efficiency()
+        print(f"\n📈 ACQUISITION EFFICIENCY")
+        print("─" * 70)
+        print(f"  Success Rate:      {efficiency['success_rate']:.1f}%")
+        print(f"  Avg Books/Run:     {efficiency['avg_per_run']:.1f}")
+        print(f"  Cost per Book:     ${efficiency['cost_per_book']:.2f}")
+
+        # Storage breakdown
+        breakdown = self.get_storage_breakdown()
+        print(f"\n💾 STORAGE BREAKDOWN")
+        print("─" * 70)
+        for item in breakdown[:5]:
+            print(f"  {item['category']:<20} {item['books']:>3} books | {item['size_mb']:>8.1f} MB")
+
+        # Annual projection
+        annual_api = monthly['claude_api'] * 12
+        annual_notion = monthly['notion'] * 12
+        annual_total = annual_api + annual_notion
+
+        print(f"\n📅 ANNUAL PROJECTION")
+        print("─" * 70)
+        print(f"  Claude API:        ${annual_api:.2f}")
+        print(f"  Notion:            ${annual_notion:.2f}")
+        print(f"  ─" * 35)
+        print(f"  TOTAL:             ${annual_total:.2f}/year")
+
+        print("\n" + "="*70 + "\n")
+
+    def show_roi(self):
+        """Show return on investment"""
+        db = self.get_db()
+        cursor = db.cursor()
+
+        cursor.execute("SELECT COUNT(*), SUM(file_size_bytes) FROM librarian_content")
+        books, total_bytes = cursor.fetchall()[0]
+
+        total_mb = total_bytes / (1024**2) if total_bytes else 0
+
+        monthly = self.get_monthly_costs()
+        cost_per_book = monthly['total'] / books if books > 0 else 0
+        cost_per_mb = monthly['total'] / total_mb if total_mb > 0 else 0
+
+        print(f"\n" + "="*70)
+        print("📊 VALUE ANALYSIS")
+        print("="*70)
+
+        print(f"\n  Total Books:       {books}")
+        print(f"  Total Storage:     {total_mb:.1f} MB")
+        print(f"  Monthly Cost:      ${monthly['total']:.2f}")
+        print(f"\n  Cost per Book:     ${cost_per_book:.4f}")
+        print(f"  Cost per MB:       ${cost_per_mb:.4f}")
+
+        # If you had to buy these books...
+        avg_book_price = 12.00  # Average ebook price
+        equivalent_value = books * avg_book_price
+
+        print(f"\n  Equivalent Value:  ${equivalent_value:.2f}")
+        print(f"    (at ${avg_book_price} per book)")
+
+        # Payback analysis
+        months_to_break_even = equivalent_value / monthly['total'] if monthly['total'] > 0 else float('inf')
+
+        if months_to_break_even > 0:
+            print(f"\n  ROI Break-even:    {months_to_break_even:.1f} months")
+        else:
+            print(f"\n  ROI:               POSITIVE (cost recovered)")
+
+        print("\n" + "="*70 + "\n")
+
+        db.close()
+
+def main():
+    import argparse
+
+    parser = argparse.ArgumentParser(description='LIBRARIAN Cost Tracking')
+    subparsers = parser.add_subparsers(dest='command', help='Commands')
+
+    subparsers.add_parser('summary', help='Show cost summary')
+    subparsers.add_parser('roi', help='Show ROI analysis')
+
+    args = parser.parse_args()
+
+    tracker = LibrarianCostTracker()
+
+    if args.command == 'summary':
+        tracker.show_summary()
+    elif args.command == 'roi':
+        tracker.show_roi()
+    else:
+        tracker.show_summary()
+
+if __name__ == "__main__":
+    main()

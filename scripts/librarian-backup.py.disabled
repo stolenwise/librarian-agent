@@ -1,0 +1,205 @@
+#!/usr/bin/env python3
+"""
+LIBRARIAN Backup & Restore System
+Protect your library with automated backups
+"""
+
+import sqlite3
+import json
+import tarfile
+import shutil
+import os
+import sys
+from datetime import datetime
+from pathlib import Path
+
+class LibrarianBackup:
+    def __init__(self):
+        self.db_path = "/home/lewis/aegis/data/sentinel.db"
+        self.library_path = "/home/lewis/aegis/library"
+        self.backup_dir = "/home/lewis/aegis/backups"
+        self.config_path = "/home/lewis/aegis/config/librarian.config.json"
+
+        os.makedirs(self.backup_dir, exist_ok=True)
+
+    def create_backup(self, name=None):
+        """Create a full backup"""
+        if name is None:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            name = f"librarian_backup_{timestamp}"
+
+        backup_path = os.path.join(self.backup_dir, name)
+        os.makedirs(backup_path, exist_ok=True)
+
+        print(f"📦 Creating backup: {name}\n")
+
+        try:
+            # Backup database
+            db_backup = os.path.join(backup_path, "sentinel.db")
+            shutil.copy2(self.db_path, db_backup)
+            print(f"  ✅ Database backed up")
+
+            # Backup configuration
+            config_backup = os.path.join(backup_path, "librarian.config.json")
+            shutil.copy2(self.config_path, config_backup)
+            print(f"  ✅ Configuration backed up")
+
+            # Backup metadata
+            metadata = {
+                "timestamp": datetime.now().isoformat(),
+                "backup_name": name,
+                "db_size": os.path.getsize(db_backup),
+                "library_path": self.library_path
+            }
+
+            with open(os.path.join(backup_path, "metadata.json"), 'w') as f:
+                json.dump(metadata, f, indent=2)
+            print(f"  ✅ Metadata saved")
+
+            # Create compressed archive
+            archive_path = f"{backup_path}.tar.gz"
+            with tarfile.open(archive_path, "w:gz") as tar:
+                tar.add(backup_path, arcname=name)
+            print(f"  ✅ Archive created: {archive_path}")
+
+            # Clean up uncompressed folder
+            shutil.rmtree(backup_path)
+
+            # Get size
+            size_mb = os.path.getsize(archive_path) / (1024**2)
+            print(f"\n✅ Backup complete: {size_mb:.1f} MB")
+
+            return archive_path
+
+        except Exception as e:
+            print(f"❌ Backup failed: {e}")
+            return None
+
+    def list_backups(self):
+        """List all available backups"""
+        backups = [f for f in os.listdir(self.backup_dir) if f.endswith('.tar.gz')]
+
+        if backups:
+            print(f"\n📦 AVAILABLE BACKUPS\n")
+            for backup in sorted(backups, reverse=True):
+                path = os.path.join(self.backup_dir, backup)
+                size_mb = os.path.getsize(path) / (1024**2)
+                mtime = datetime.fromtimestamp(os.path.getmtime(path))
+                print(f"  • {backup}")
+                print(f"    Size: {size_mb:.1f} MB | Date: {mtime.strftime('%Y-%m-%d %H:%M:%S')}")
+        else:
+            print("No backups found")
+
+    def restore_backup(self, backup_name):
+        """Restore from a backup"""
+        backup_path = os.path.join(self.backup_dir, backup_name)
+
+        if not os.path.exists(backup_path):
+            print(f"❌ Backup not found: {backup_name}")
+            return False
+
+        print(f"🔄 Restoring from: {backup_name}\n")
+
+        response = input("⚠️  This will overwrite current database. Continue? (yes/no): ")
+        if response.lower() != 'yes':
+            print("Cancelled")
+            return False
+
+        try:
+            # Extract archive
+            extract_dir = os.path.join(self.backup_dir, "restore_temp")
+            os.makedirs(extract_dir, exist_ok=True)
+
+            with tarfile.open(backup_path, "r:gz") as tar:
+                tar.extractall(extract_dir)
+            print(f"  ✅ Archive extracted")
+
+            # Find the backup folder
+            contents = os.listdir(extract_dir)
+            backup_folder = os.path.join(extract_dir, contents[0])
+
+            # Restore database
+            restored_db = os.path.join(backup_folder, "sentinel.db")
+            shutil.copy2(restored_db, self.db_path)
+            print(f"  ✅ Database restored")
+
+            # Restore configuration
+            restored_config = os.path.join(backup_folder, "librarian.config.json")
+            if os.path.exists(restored_config):
+                shutil.copy2(restored_config, self.config_path)
+                print(f"  ✅ Configuration restored")
+
+            # Cleanup
+            shutil.rmtree(extract_dir)
+
+            print(f"\n✅ Restore complete")
+            return True
+
+        except Exception as e:
+            print(f"❌ Restore failed: {e}")
+            return False
+
+    def delete_backup(self, backup_name):
+        """Delete a backup"""
+        backup_path = os.path.join(self.backup_dir, backup_name)
+
+        if not os.path.exists(backup_path):
+            print(f"❌ Backup not found: {backup_name}")
+            return False
+
+        response = input(f"Delete {backup_name}? (yes/no): ")
+        if response.lower() == 'yes':
+            os.remove(backup_path)
+            print(f"✅ Deleted: {backup_name}")
+            return True
+        else:
+            print("Cancelled")
+            return False
+
+    def get_backup_stats(self):
+        """Show backup statistics"""
+        backups = [f for f in os.listdir(self.backup_dir) if f.endswith('.tar.gz')]
+
+        total_size = sum(os.path.getsize(os.path.join(self.backup_dir, b)) for b in backups)
+        total_size_mb = total_size / (1024**2)
+
+        print(f"\n📦 BACKUP STATISTICS\n")
+        print(f"  Total Backups:    {len(backups)}")
+        print(f"  Total Size:       {total_size_mb:.1f} MB")
+        print(f"  Backup Location:  {self.backup_dir}")
+
+def main():
+    import argparse
+
+    parser = argparse.ArgumentParser(description='LIBRARIAN Backup & Restore')
+    subparsers = parser.add_subparsers(dest='command', help='Commands')
+
+    subparsers.add_parser('create', help='Create backup')
+    subparsers.add_parser('list', help='List backups')
+    subparsers.add_parser('stats', help='Show backup statistics')
+
+    restore_parser = subparsers.add_parser('restore', help='Restore backup')
+    restore_parser.add_argument('backup', help='Backup name')
+
+    delete_parser = subparsers.add_parser('delete', help='Delete backup')
+    delete_parser.add_argument('backup', help='Backup name')
+
+    args = parser.parse_args()
+
+    backup = LibrarianBackup()
+
+    if args.command == 'create':
+        backup.create_backup()
+    elif args.command == 'list':
+        backup.list_backups()
+    elif args.command == 'stats':
+        backup.get_backup_stats()
+    elif args.command == 'restore':
+        backup.restore_backup(args.backup)
+    elif args.command == 'delete':
+        backup.delete_backup(args.backup)
+    else:
+        parser.print_help()
+
+if __name__ == "__main__":
+    main()

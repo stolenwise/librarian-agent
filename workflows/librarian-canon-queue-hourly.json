@@ -1,0 +1,113 @@
+{
+  "name": "LIBRARIAN - Canon Hourly Queue",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "minutes": 60
+            }
+          ]
+        }
+      },
+      "id": "schedule_hourly",
+      "name": "Schedule: Every Hour",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "command": "cd /home/lewis/aegis/scripts && python3 librarian-canon-scheduler.py --run-once 2>&1"
+      },
+      "id": "execute_scheduler",
+      "name": "Execute Canon Scheduler",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "javaScriptCode": "// Parse the scheduler output\nconst output = $json.stdout || '';\nconst lines = output.split('\\n');\n\n// Extract key information from logs\nlet queuedCount = 0;\nlet totalQueued = 0;\nlet currentIndex = 0;\nlet status = {};\n\nfor (const line of lines) {\n  if (line.includes('Added') && line.includes('books to queue')) {\n    const match = line.match(/Added (\\d+) books to queue/);\n    if (match) queuedCount = parseInt(match[1]);\n  }\n  if (line.includes('Config saved')) {\n    const indexMatch = line.match(/index=(\\d+)/);\n    const totalMatch = line.match(/total_queued=(\\d+)/);\n    if (indexMatch) currentIndex = parseInt(indexMatch[1]);\n    if (totalMatch) totalQueued = parseInt(totalMatch[1]);\n  }\n  if (line.includes('Queue Status')) {\n    const pendingMatch = line.match(/(\\d+) pending/);\n    const acquiredMatch = line.match(/(\\d+) acquired/);\n    const totalMatch = line.match(/(\\d+) total/);\n    if (pendingMatch) status.pending = parseInt(pendingMatch[1]);\n    if (acquiredMatch) status.acquired = parseInt(acquiredMatch[1]);\n    if (totalMatch) status.total = parseInt(totalMatch[1]);\n  }\n}\n\nreturn {json: {\n  queued: queuedCount,\n  total_queued_session: totalQueued,\n  current_index: currentIndex,\n  status: status,\n  success: queuedCount > 0,\n  timestamp: new Date().toISOString(),\n  raw_output: output\n}};"
+      },
+      "id": "parse_output",
+      "name": "Parse Scheduler Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "javaScriptCode": "// Build Discord message with status\nconst queued = $json.queued || 0;\nconst pending = $json.status?.pending || 0;\nconst acquired = $json.status?.acquired || 0;\nconst total = $json.status?.total || 0;\nconst index = $json.current_index || 0;\n\nlet color = 5793266; // Default blue\nlet emoji = '📚';\n\nif (queued === 0) {\n  emoji = '✅';\n  color = 3066993; // Green - all canon queued\n}\n\nconst progressPercent = index > 0 ? Math.round((index / 251) * 100) : 0;\nconst progressBar = '█'.repeat(Math.floor(progressPercent / 5)) + '░'.repeat(20 - Math.floor(progressPercent / 5));\n\nreturn {json: {\n  embeds: [{\n    title: `${emoji} Canon Hourly Queue Update`,\n    fields: [\n      {\n        name: 'Books Added This Hour',\n        value: `**${queued}** books queued`,\n        inline: true\n      },\n      {\n        name: 'Progress',\n        value: `${index}/251 books (${progressPercent}%)`,\n        inline: true\n      },\n      {\n        name: 'Queue Status',\n        value: `⏳ **${pending}** pending | ✅ **${acquired}** acquired`,\n        inline: false\n      },\n      {\n        name: 'Progress Bar',\n        value: `\\`${progressBar}\\` ${progressPercent}%`,\n        inline: false\n      }\n    ],\n    color: color,\n    timestamp: new Date().toISOString(),\n    footer: {\n      text: 'LIBRARIAN Canon Scheduler'\n    }\n  }],\n  status: 'success'\n}};"
+      },
+      "id": "format_discord",
+      "name": "Format Discord Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.DISCORD_WEBHOOK_LIBRARIAN}}",
+        "options": {},
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": "={{$json}}"
+      },
+      "id": "post_discord",
+      "name": "Post to Discord #librarian",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO watch_logs (event_type, agent_name, severity, message, details, logged_at) VALUES ('canon_queue', 'LIBRARIAN', 'info', 'Hourly canon queue completed', json('{{json({\"queued\": $json.queued, \"pending\": $json.status.pending, \"index\": $json.current_index})}}'), datetime('now'))"
+      },
+      "id": "log_event",
+      "name": "Log to Watch System",
+      "type": "n8n-nodes-base.sqlite",
+      "typeVersion": 1,
+      "position": [1050, 450]
+    }
+  ],
+  "connections": {
+    "schedule_hourly": {
+      "main": [[{
+        "node": "execute_scheduler",
+        "type": "main",
+        "index": 0
+      }]]
+    },
+    "execute_scheduler": {
+      "main": [[{
+        "node": "parse_output",
+        "type": "main",
+        "index": 0
+      }]]
+    },
+    "parse_output": {
+      "main": [[{
+        "node": "format_discord",
+        "type": "main",
+        "index": 0
+      }]]
+    },
+    "format_discord": {
+      "main": [[{
+        "node": "post_discord",
+        "type": "main",
+        "index": 0
+      },
+      {
+        "node": "log_event",
+        "type": "main",
+        "index": 0
+      }]]
+    }
+  }
+}

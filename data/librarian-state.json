@@ -1,0 +1,3140 @@
+{
+  "books": {
+    "Unknown - Holy Bible (King James Version)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:50:28.145399",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Unknown - Holy Bible (New King James Version)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:50:44.962072",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Holy Bible (ESV - English Standard Version)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:51:01.740157",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Holy Bible (NASB - New American Standard Bible)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:51:18.396124",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Unknown - The New Testament (Separate from OT)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:51:34.770555",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Unknown - The Old Testament (Separate from NT)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:51:51.035094",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Unknown - The Apocrypha": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:52:07.325516",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Unknown - The Dead Sea Scrolls (selections)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:52:24.287625",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Unknown - The Didache (Teaching of the Twelve Apostles)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:52:40.694875",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Unknown - 1 Clement": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:53:00.630113",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Unknown - 2 Clement": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:53:17.607634",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Unknown - The Epistle of Polycarp": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:53:36.630068",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Unknown - The Apostles' Creed": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:53:52.800593",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Unknown - The Nicene Creed": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:54:09.053424",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Unknown - The Athanasian Creed": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:54:25.213854",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Augustine - On Christian Doctrine": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:54:49.704688",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Origen - On First Principles": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:55:06.227949",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Clement of Alexandria - Protrepticus": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:55:22.758653",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "John Chrysostom - Homilies on Matthew": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:55:39.375963",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Anselm - Proslogion": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:55:55.764384",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Anselm - Cur Deus Homo": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:56:12.026621",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Abelard - Sic et Non": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:56:28.891263",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Abelard - Theology": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:56:45.024180",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Aquinas - Disputed Questions": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:57:39.521170",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Bonaventure - Sentences Commentary": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:57:55.742296",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Bonaventure - The Journey of the Mind to God": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Bonaventure - The Journey of the Mind to God.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T11:57:59.900753",
+      "file_size_mb": 0.25768184661865234
+    },
+    "Duns Scotus - Ordinatio": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:58:16.482461",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "William of Ockham - Summa of Logic": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:58:32.781518",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Dante Alighieri - The Divine Comedy": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/medieval/Dante Alighieri - The Divine Comedy.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T11:58:39.816415",
+      "file_size_mb": 29.322054862976074
+    },
+    "Unknown - \u2022 Inferno": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:58:56.809178",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Unknown - \u2022 Purgatorio": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:59:13.400568",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Unknown - \u2022 Paradiso": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:59:29.848547",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Martin Luther - Ninety-Five Theses": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T11:59:46.246383",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Martin Luther - On the Freedom of a Christian": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/christian-canon/church-fathers/Martin Luther - On the Freedom of a Christian.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T11:59:50.152028",
+      "file_size_mb": 0.4803504943847656
+    },
+    "Martin Luther - The Babylonian Captivity of the Church": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:00:06.908199",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Martin Luther - Table Talk": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/christian-canon/reformation/Martin Luther - Table Talk.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:00:12.481709",
+      "file_size_mb": 0.4338254928588867
+    },
+    "John Calvin - Institutes of the Christian Religion": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/christian-canon/church-fathers/John Calvin - Institutes of the Christian Religion.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:00:18.240480",
+      "file_size_mb": 0.8320989608764648
+    },
+    "John Calvin - Commentary on Romans": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:00:35.269003",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Ulrich Zwingli - Selected Works": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:00:51.634482",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "John Knox - The First Blast of the Trumpet Against the Monstrous Regiment of Women": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/John Knox - The First Blast of the Trumpet Against the Monstrous Regiment of Women.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:00:55.560293",
+      "file_size_mb": 0.17701053619384766
+    },
+    "Richard Hooker - Laws of Ecclesiastical Polity": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:01:12.812598",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Pre-Socratics - Fragments & Testimonia": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Pre-Socratics - Fragments & Testimonia.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:01:20.381474",
+      "file_size_mb": 0.43874073028564453
+    },
+    "Plato - Apology": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/ancient/Plato - Apology.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:01:25.677814",
+      "file_size_mb": 0.09104251861572266
+    },
+    "Plato - Euthyphro": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/ancient/Plato - Euthyphro.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:01:30.058906",
+      "file_size_mb": 0.07708072662353516
+    },
+    "Plato - Crito": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/ancient/Plato - Crito.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:01:34.665805",
+      "file_size_mb": 0.177337646484375
+    },
+    "Plato - Phaedo": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/ancient/Plato - Phaedo.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:01:38.566280",
+      "file_size_mb": 0.14057159423828125
+    },
+    "Plato - Republic": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/ancient/Plato - Republic.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:01:43.013397",
+      "file_size_mb": 0.49817466735839844
+    },
+    "Plato - Symposium": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/ancient/Plato - Symposium.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:01:46.856504",
+      "file_size_mb": 0.13704776763916016
+    },
+    "Plato - Phaedrus": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/ancient/Plato - Phaedrus.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:01:50.866884",
+      "file_size_mb": 0.13641357421875
+    },
+    "Plato - Timaeus": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/ancient/Plato - Timaeus.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:01:56.878006",
+      "file_size_mb": 0.21097660064697266
+    },
+    "Plato - Laws": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/ancient/Plato - Laws.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:02:03.032445",
+      "file_size_mb": 0.5384740829467773
+    },
+    "Plato - Parmenides": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/ancient/Plato - Parmenides.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:02:07.082824",
+      "file_size_mb": 0.13082218170166016
+    },
+    "Plato - Sophist": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/ancient/Plato - Sophist.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:02:12.139200",
+      "file_size_mb": 0.14862728118896484
+    },
+    "Plato - Theaetetus": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/ancient/Plato - Theaetetus.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:02:18.569263",
+      "file_size_mb": 0.1882467269897461
+    },
+    "Aristotle - Categories": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/ancient/Aristotle - Categories.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:02:23.301795",
+      "file_size_mb": 0.09026241302490234
+    },
+    "Aristotle - Prior Analytics": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:02:40.265190",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Aristotle - Posterior Analytics": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:02:56.789080",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Aristotle - Physics": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:03:13.413481",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Aristotle - Metaphysics": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:03:30.546158",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Aristotle - Nicomachean Ethics": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:03:47.022425",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Aristotle - Politics": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/ancient/Aristotle - Politics.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:03:52.227501",
+      "file_size_mb": 0.28003978729248047
+    },
+    "Aristotle - Rhetoric": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:04:09.230897",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Aristotle - Poetics": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/ancient/Aristotle - Poetics.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:04:12.918692",
+      "file_size_mb": 0.10170745849609375
+    },
+    "Aristotle - De Anima": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:04:29.499481",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Aristotle - Generation of Animals": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:04:45.916945",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Socrates - (as recorded by Plato and Xenophon)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:05:02.255489",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Xenophon - Memorabilia": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Xenophon - Memorabilia.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:05:06.126415",
+      "file_size_mb": 0.22824954986572266
+    },
+    "Homer - The Iliad": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Homer - The Iliad.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:05:11.357450",
+      "file_size_mb": 1.9904260635375977
+    },
+    "Homer - The Odyssey": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Homer - The Odyssey.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:05:16.194954",
+      "file_size_mb": 0.4269990921020508
+    },
+    "Hesiod - Theogony": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:05:32.665756",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Hesiod - Works and Days": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:05:48.903142",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Aeschylus - Oresteia": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:06:05.436219",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Aeschylus - Prometheus Bound": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Aeschylus - Prometheus Bound.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:06:08.968217",
+      "file_size_mb": 0.17484569549560547
+    },
+    "Aeschylus - Seven Against Thebes": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Aeschylus - Seven Against Thebes.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:06:13.169174",
+      "file_size_mb": 0.17484569549560547
+    },
+    "Sophocles - Oedipus Rex": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:06:29.694133",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Sophocles - Antigone": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Sophocles - Antigone.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:06:33.449868",
+      "file_size_mb": 0.2003011703491211
+    },
+    "Sophocles - Electra": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:06:50.177737",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Sophocles - Philoctetes": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Sophocles - Philoctetes.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:06:54.260812",
+      "file_size_mb": 1.000596046447754
+    },
+    "Sophocles - The Women of Trachis": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:07:11.032055",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Euripides - Medea": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Euripides - Medea.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:07:14.661360",
+      "file_size_mb": 0.12451744079589844
+    },
+    "Euripides - The Bacchae": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Euripides - The Bacchae.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:07:20.113602",
+      "file_size_mb": 0.3189868927001953
+    },
+    "Euripides - Hippolytus": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Euripides - Hippolytus.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:07:25.031418",
+      "file_size_mb": 0.1364145278930664
+    },
+    "Euripides - The Trojan Women": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Euripides - The Trojan Women.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:07:29.638250",
+      "file_size_mb": 0.1288776397705078
+    },
+    "Euripides - Alcestis": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Euripides - Alcestis.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:07:33.312837",
+      "file_size_mb": 0.10685920715332031
+    },
+    "Aristophanes - The Clouds": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Aristophanes - The Clouds.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:07:38.553737",
+      "file_size_mb": 0.10107421875
+    },
+    "Aristophanes - The Frogs": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Aristophanes - The Frogs.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:07:42.416357",
+      "file_size_mb": 0.10174751281738281
+    },
+    "Aristophanes - Lysistrata": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Aristophanes - Lysistrata.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:07:47.070662",
+      "file_size_mb": 1.8419370651245117
+    },
+    "Sappho - Fragments": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:08:04.254382",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Sappho - Complete Poetry": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:08:20.795481",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Pindar - Olympian Odes": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:08:37.308518",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Pindar - Pythian Odes": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:08:53.683951",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Virgil - The Aeneid": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Virgil - The Aeneid.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:08:57.955646",
+      "file_size_mb": 0.33323192596435547
+    },
+    "Virgil - Eclogues": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Virgil - Eclogues.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:09:01.590248",
+      "file_size_mb": 0.09012126922607422
+    },
+    "Virgil - Georgics": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Virgil - Georgics.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:09:05.883661",
+      "file_size_mb": 0.11651039123535156
+    },
+    "Ovid - Metamorphoses": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Ovid - Metamorphoses.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:09:25.469315",
+      "file_size_mb": 0.36054420471191406
+    },
+    "Ovid - The Art of Love": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Ovid - The Art of Love.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:09:37.337081",
+      "file_size_mb": 0.17356204986572266
+    },
+    "Horace - Odes": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Horace - Odes.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:09:41.077642",
+      "file_size_mb": 0.16048145294189453
+    },
+    "Horace - Satires": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Horace - Satires.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:09:44.812012",
+      "file_size_mb": 0.20201969146728516
+    },
+    "Horace - Epistles": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Horace - Epistles.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:09:49.708436",
+      "file_size_mb": 0.20201969146728516
+    },
+    "Lucan - Pharsalia": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Lucan - Pharsalia.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:09:58.062558",
+      "file_size_mb": 0.2900962829589844
+    },
+    "Apuleius - The Golden Ass": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Apuleius - The Golden Ass.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:10:04.033932",
+      "file_size_mb": 0.2784442901611328
+    },
+    "Terence - Comedies": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Terence - Comedies.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:10:09.174444",
+      "file_size_mb": 0.4501466751098633
+    },
+    "Plautus - Comedies": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Plautus - Comedies.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:10:13.213566",
+      "file_size_mb": 0.1525411605834961
+    },
+    "Cicero - On the Republic": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Cicero - On the Republic.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:10:17.351447",
+      "file_size_mb": 0.24294567108154297
+    },
+    "Cicero - On the Laws": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:10:33.940823",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Cicero - On Duties (De Officiis)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:10:50.192409",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Cicero - On the Orator": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:11:06.588566",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Cicero - Philosophical Essays": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:11:24.118657",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Seneca - Essays": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/essays/Seneca - Essays.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:11:30.438794",
+      "file_size_mb": 0.22144794464111328
+    },
+    "Seneca - On Clemency": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Seneca - On Clemency.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:11:36.751126",
+      "file_size_mb": 0.43706321716308594
+    },
+    "Seneca - Letters from a Stoic": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:11:53.666754",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Seneca - Moral Letters to Lucilius": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:12:09.882829",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Marcus Aurelius - Meditations": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Marcus Aurelius - Meditations.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:12:15.051783",
+      "file_size_mb": 0.2667369842529297
+    },
+    "Epictetus - Discourses": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Epictetus - Discourses.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:12:18.876133",
+      "file_size_mb": 0.208526611328125
+    },
+    "Epictetus - Enchiridion": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Epictetus - Enchiridion.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:12:22.487411",
+      "file_size_mb": 0.08356761932373047
+    },
+    "Lucretius - De Rerum Natura (On the Nature of Things)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:12:39.254998",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Livy - History of Rome (selections)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:12:55.518612",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Tacitus - Histories": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Tacitus - Histories.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:13:02.492202",
+      "file_size_mb": 0.8193931579589844
+    },
+    "Tacitus - Annals": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Tacitus - Annals.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:13:11.312604",
+      "file_size_mb": 0.344268798828125
+    },
+    "Tacitus - Germania": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Tacitus - Germania.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:13:16.662235",
+      "file_size_mb": 0.25586509704589844
+    },
+    "Pliny the Younger - Letters": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Pliny the Younger - Letters.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:13:21.940741",
+      "file_size_mb": 0.30107784271240234
+    },
+    "Suetonius - The Twelve Caesars": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Suetonius - The Twelve Caesars.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:13:26.817691",
+      "file_size_mb": 0.6323633193969727
+    },
+    "Unknown - Beowulf": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:13:43.361057",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Unknown - The Song of Roland": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Unknown - The Song of Roland.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:13:48.967241",
+      "file_size_mb": 0.136749267578125
+    },
+    "Unknown - The Nibelungenlied": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:14:05.577189",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "King Arthur Legends - (various versions)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:14:21.858887",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Eddic Poetry - (Norse)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:14:38.468609",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Prose Edda - Snorri Sturluson": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Prose Edda - Snorri Sturluson.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:14:43.741190",
+      "file_size_mb": 0.26006412506103516
+    },
+    "Bernard of Clairvaux - Selected Works": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:15:02.197709",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Bernard of Clairvaux - On Loving God": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Bernard of Clairvaux - On Loving God.txt",
+      "source": "gutenberg",
+      "format": "txt",
+      "downloaded_date": "2026-02-24T12:15:07.297405",
+      "file_size_mb": 0.02184295654296875
+    },
+    "Hildegard of Bingen - The Book of Divine Works": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:15:24.925453",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Hildegard of Bingen - Scivias": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:15:41.305585",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Meister Eckhart - Sermons and Writings": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:15:57.465245",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "John of the Cross - The Dark Night of the Soul": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/John of the Cross - The Dark Night of the Soul.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:16:03.386409",
+      "file_size_mb": 0.5192012786865234
+    },
+    "John of the Cross - The Spiritual Canticle": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:16:20.199105",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "John of the Cross - The Living Flame of Love": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/John of the Cross - The Living Flame of Love.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:16:25.092411",
+      "file_size_mb": 0.2690725326538086
+    },
+    "Teresa of \u00c1vila - The Interior Castle": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:16:41.805883",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Teresa of \u00c1vila - Life": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:16:58.519707",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Thomas \u00e0 Kempis - The Imitation of Christ": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Thomas \u00e0 Kempis - The Imitation of Christ.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:17:03.619570",
+      "file_size_mb": 0.2995290756225586
+    },
+    "Unknown - The Cloud of Unknowing (Anonymous)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:17:20.148829",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Julian of Norwich - Revelations of Divine Love": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Julian of Norwich - Revelations of Divine Love.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:17:25.237983",
+      "file_size_mb": 0.30214786529541016
+    },
+    "Dante Alighieri - The Divine Comedy (as literature)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:17:42.189324",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Dante Alighieri - La Vita Nuova": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/medieval/Dante Alighieri - La Vita Nuova.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:17:46.104306",
+      "file_size_mb": 0.20577335357666016
+    },
+    "Petrarch - Sonnets": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Petrarch - Sonnets.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:17:50.086751",
+      "file_size_mb": 0.3440513610839844
+    },
+    "Petrarch - Africa": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:18:06.815575",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Francesco Boccaccio - The Decameron": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:18:23.329245",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "William Shakespeare - Complete Works": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/renaissance/William Shakespeare - Complete Works.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:18:29.192064",
+      "file_size_mb": 2.7663192749023438
+    },
+    "William Shakespeare - Hamlet": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/renaissance/William Shakespeare - Hamlet.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:18:38.441723",
+      "file_size_mb": 0.3389596939086914
+    },
+    "William Shakespeare - Macbeth": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/renaissance/William Shakespeare - Macbeth.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:18:45.783085",
+      "file_size_mb": 0.3096580505371094
+    },
+    "William Shakespeare - Othello": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/renaissance/William Shakespeare - Othello.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:18:53.416509",
+      "file_size_mb": 0.32663440704345703
+    },
+    "William Shakespeare - King Lear": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/renaissance/William Shakespeare - King Lear.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:19:00.267754",
+      "file_size_mb": 0.3295173645019531
+    },
+    "William Shakespeare - A Midsummer Night's Dream": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/renaissance/William Shakespeare - A Midsummer Night's Dream.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:19:04.533184",
+      "file_size_mb": 0.31054210662841797
+    },
+    "William Shakespeare - The Tempest": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/renaissance/William Shakespeare - The Tempest.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:19:08.414165",
+      "file_size_mb": 0.22650909423828125
+    },
+    "William Shakespeare - Much Ado About Nothing": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/renaissance/William Shakespeare - Much Ado About Nothing.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:19:12.557251",
+      "file_size_mb": 0.3177986145019531
+    },
+    "William Shakespeare - The Merchant of Venice": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/renaissance/William Shakespeare - The Merchant of Venice.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:19:17.914908",
+      "file_size_mb": 0.30280399322509766
+    },
+    "William Shakespeare - Twelfth Night": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/renaissance/William Shakespeare - Twelfth Night.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:19:21.968283",
+      "file_size_mb": 0.31376171112060547
+    },
+    "William Shakespeare - As You Like It": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/renaissance/William Shakespeare - As You Like It.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:19:26.136955",
+      "file_size_mb": 0.31789302825927734
+    },
+    "William Shakespeare - Romeo and Juliet": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/renaissance/William Shakespeare - Romeo and Juliet.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:19:30.995996",
+      "file_size_mb": 0.3255786895751953
+    },
+    "William Shakespeare - Antony and Cleopatra": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/renaissance/William Shakespeare - Antony and Cleopatra.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:19:35.238524",
+      "file_size_mb": 0.33228015899658203
+    },
+    "William Shakespeare - Coriolanus": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/renaissance/William Shakespeare - Coriolanus.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:19:39.865426",
+      "file_size_mb": 0.3326578140258789
+    },
+    "Christopher Marlowe - Doctor Faustus": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Christopher Marlowe - Doctor Faustus.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:19:43.731389",
+      "file_size_mb": 0.14116764068603516
+    },
+    "Christopher Marlowe - Tamburlaine": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Christopher Marlowe - Tamburlaine.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:19:50.486487",
+      "file_size_mb": 0.1547985076904297
+    },
+    "Christopher Marlowe - The Jew of Malta": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Christopher Marlowe - The Jew of Malta.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:19:54.331202",
+      "file_size_mb": 0.1430349349975586
+    },
+    "Ben Jonson - Volpone": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Ben Jonson - Volpone.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:19:58.551574",
+      "file_size_mb": 0.19422340393066406
+    },
+    "Ben Jonson - The Alchemist": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Ben Jonson - The Alchemist.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:20:02.503709",
+      "file_size_mb": 0.1850271224975586
+    },
+    "Ben Jonson - Bartholomew Fair": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Ben Jonson - Bartholomew Fair.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:20:06.487253",
+      "file_size_mb": 0.19091320037841797
+    },
+    "Edmund Spenser - The Faerie Queene": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Edmund Spenser - The Faerie Queene.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:20:11.197210",
+      "file_size_mb": 0.3224353790283203
+    },
+    "Sir Philip Sidney - Astrophil and Stella": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:20:28.216028",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Sir Philip Sidney - The Defence of Poesy": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:20:44.748788",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Mary Wroth - Pamphilia to Amphilanthus": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:21:01.404754",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Miguel de Cervantes - Don Quixote": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/renaissance/Miguel de Cervantes - Don Quixote.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:21:20.148138",
+      "file_size_mb": 43.951812744140625
+    },
+    "Fernando de Rojas - The Celestina": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:21:36.898878",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Ludovico Ariosto - Orlando Furioso": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:21:53.563891",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Torquato Tasso - Jerusalem Delivered": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Torquato Tasso - Jerusalem Delivered.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:21:59.366505",
+      "file_size_mb": 0.38995933532714844
+    },
+    "Francis Bacon - Essays": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/essays/Francis Bacon - Essays.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:22:06.732645",
+      "file_size_mb": 0.4663400650024414
+    },
+    "Francis Bacon - The Advancement of Learning": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Francis Bacon - The Advancement of Learning.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:22:12.570991",
+      "file_size_mb": 0.5448675155639648
+    },
+    "Francis Bacon - Novum Organum": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Francis Bacon - Novum Organum.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:22:19.283453",
+      "file_size_mb": 0.36260128021240234
+    },
+    "Ren\u00e9 Descartes - Meditations on First Philosophy": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:22:36.028532",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Ren\u00e9 Descartes - Discourse on Method": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Ren\u00e9 Descartes - Discourse on Method.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:22:39.477901",
+      "file_size_mb": 0.1644573211669922
+    },
+    "Ren\u00e9 Descartes - Principles of Philosophy": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Ren\u00e9 Descartes - Principles of Philosophy.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:22:44.407545",
+      "file_size_mb": 0.1385660171508789
+    },
+    "Thomas Hobbes - Leviathan": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Thomas Hobbes - Leviathan.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:22:51.590977",
+      "file_size_mb": 0.8243751525878906
+    },
+    "John Locke - An Essay Concerning Human Understanding": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/enlightenment/John Locke - An Essay Concerning Human Understanding.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:22:55.543881",
+      "file_size_mb": 0.5179042816162109
+    },
+    "John Locke - Two Treatises of Government": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:23:12.637967",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "John Locke - A Letter Concerning Toleration": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:23:29.657695",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Baruch Spinoza - Ethics": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:23:46.412540",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Spinoza - Theologico-Political Treatise": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Spinoza - Theologico-Political Treatise.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:23:50.615490",
+      "file_size_mb": 0.14909076690673828
+    },
+    "Gottfried Wilhelm Leibniz - Monadology": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:24:07.391427",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Leibniz - Theodicy": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Leibniz - Theodicy.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:24:15.811656",
+      "file_size_mb": 0.4803504943847656
+    },
+    "Leibniz - New Essays on Human Understanding": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/essays/Leibniz - New Essays on Human Understanding.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:24:21.409632",
+      "file_size_mb": 0.2318735122680664
+    },
+    "David Hume - An Enquiry Concerning Human Understanding": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/David Hume - An Enquiry Concerning Human Understanding.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:24:27.463810",
+      "file_size_mb": 0.2330007553100586
+    },
+    "Hume - Dialogues Concerning Natural Religion": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Hume - Dialogues Concerning Natural Religion.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:24:37.398898",
+      "file_size_mb": 0.16668701171875
+    },
+    "Hume - A Treatise of Human Nature": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Hume - A Treatise of Human Nature.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:24:45.597641",
+      "file_size_mb": 0.6318426132202148
+    },
+    "Hume - Essays Moral, Political, and Literary": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/essays/Hume - Essays Moral, Political, and Literary.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:24:51.854636",
+      "file_size_mb": 0.6383323669433594
+    },
+    "Immanuel Kant - Critique of Pure Reason": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/enlightenment/Immanuel Kant - Critique of Pure Reason.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:24:56.342011",
+      "file_size_mb": 0.6019554138183594
+    },
+    "Kant - Critique of Practical Reason": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/enlightenment/Kant - Critique of Practical Reason.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:25:01.085971",
+      "file_size_mb": 0.20211410522460938
+    },
+    "Kant - Prolegomena to Any Future Metaphysics": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/enlightenment/Kant - Prolegomena to Any Future Metaphysics.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:25:06.822431",
+      "file_size_mb": 0.1951303482055664
+    },
+    "Kant - Perpetual Peace": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/enlightenment/Kant - Perpetual Peace.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:25:11.737293",
+      "file_size_mb": 0.19876956939697266
+    },
+    "Kant - Groundwork of the Metaphysics of Morals": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:25:29.083900",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "John Milton - Paradise Lost": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/renaissance/John Milton - Paradise Lost.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:25:32.714306",
+      "file_size_mb": 0.2757139205932617
+    },
+    "Milton - Paradise Regained": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/renaissance/Milton - Paradise Regained.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:25:39.428305",
+      "file_size_mb": 0.11511421203613281
+    },
+    "Milton - Samson Agonistes": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:25:57.451727",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Milton - Areopagitica": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/renaissance/Milton - Areopagitica.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:26:02.816154",
+      "file_size_mb": 0.11172771453857422
+    },
+    "Milton - The Reason of Church Government": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/renaissance/Milton - The Reason of Church Government.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:26:08.127353",
+      "file_size_mb": 0.1464557647705078
+    },
+    "Jonathan Swift - A Tale of a Tub": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Jonathan Swift - A Tale of a Tub.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:26:36.937412",
+      "file_size_mb": 7.557525634765625
+    },
+    "Swift - A Modest Proposal": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Swift - A Modest Proposal.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:26:44.483591",
+      "file_size_mb": 0.2514533996582031
+    },
+    "Swift - Gulliver's Travels": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Swift - Gulliver's Travels.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:26:55.038501",
+      "file_size_mb": 0.7080440521240234
+    },
+    "Daniel Defoe - Robinson Crusoe": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Daniel Defoe - Robinson Crusoe.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:27:16.708281",
+      "file_size_mb": 0.3297748565673828
+    },
+    "Defoe - Moll Flanders": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Defoe - Moll Flanders.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:27:29.100636",
+      "file_size_mb": 0.4972105026245117
+    },
+    "Samuel Richardson - Pamela": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Samuel Richardson - Pamela.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:27:36.883026",
+      "file_size_mb": 0.5320215225219727
+    },
+    "Richardson - Clarissa": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Richardson - Clarissa.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:27:44.261903",
+      "file_size_mb": 0.3268623352050781
+    },
+    "Henry Fielding - Tom Jones": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Henry Fielding - Tom Jones.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:27:52.998407",
+      "file_size_mb": 1.0143041610717773
+    },
+    "Fielding - Joseph Andrews": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Fielding - Joseph Andrews.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:27:57.159864",
+      "file_size_mb": 0.4535245895385742
+    },
+    "Laurence Sterne - Tristram Shandy": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Laurence Sterne - Tristram Shandy.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:28:01.530430",
+      "file_size_mb": 1.7658262252807617
+    },
+    "Sterne - A Sentimental Journey": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Sterne - A Sentimental Journey.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:28:09.984399",
+      "file_size_mb": 0.33283138275146484
+    },
+    "Jane Austen - Pride and Prejudice": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/19th-century/Jane Austen - Pride and Prejudice.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:28:23.505473",
+      "file_size_mb": 23.68663787841797
+    },
+    "Austen - Sense and Sensibility": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/19th-century/Austen - Sense and Sensibility.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:28:32.207801",
+      "file_size_mb": 0.5556011199951172
+    },
+    "Austen - Emma": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/19th-century/Austen - Emma.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:28:38.598975",
+      "file_size_mb": 0.4594440460205078
+    },
+    "Austen - Northanger Abbey": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/19th-century/Austen - Northanger Abbey.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:28:45.517517",
+      "file_size_mb": 0.43896961212158203
+    },
+    "Austen - Persuasion": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/19th-century/Austen - Persuasion.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:28:58.090235",
+      "file_size_mb": 0.44550609588623047
+    },
+    "Austen - Mansfield Park": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/19th-century/Austen - Mansfield Park.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:29:05.443359",
+      "file_size_mb": 0.46109580993652344
+    },
+    "Jean-Jacques Rousseau - Emile": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/enlightenment/Jean-Jacques Rousseau - Emile.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:29:15.515367",
+      "file_size_mb": 0.5835294723510742
+    },
+    "Rousseau - Discourse on the Origin of Inequality": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/enlightenment/Rousseau - Discourse on the Origin of Inequality.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:29:21.959927",
+      "file_size_mb": 0.1685028076171875
+    },
+    "Rousseau - The Social Contract": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/enlightenment/Rousseau - The Social Contract.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:29:26.942696",
+      "file_size_mb": 0.4924135208129883
+    },
+    "Rousseau - Confessions": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/enlightenment/Rousseau - Confessions.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:29:32.410077",
+      "file_size_mb": 1.6222038269042969
+    },
+    "Voltaire - Candide": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/enlightenment/Voltaire - Candide.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:29:37.452243",
+      "file_size_mb": 0.7052488327026367
+    },
+    "Voltaire - Philosophical Dictionary": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/enlightenment/Voltaire - Philosophical Dictionary.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:29:43.622990",
+      "file_size_mb": 0.2971992492675781
+    },
+    "Montesquieu - The Spirit of the Laws": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Montesquieu - The Spirit of the Laws.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:30:01.883560",
+      "file_size_mb": 8.427300453186035
+    },
+    "William Wordsworth - Lyrical Ballads": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/William Wordsworth - Lyrical Ballads.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:30:07.902499",
+      "file_size_mb": 0.1742534637451172
+    },
+    "Wordsworth - The Prelude": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:30:27.934663",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Wordsworth - Selected Poems": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:30:49.356143",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Samuel Taylor Coleridge - Christabel": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:31:06.966805",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Coleridge - The Rime of the Ancient Mariner": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Coleridge - The Rime of the Ancient Mariner.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:31:19.985190",
+      "file_size_mb": 0.3186206817626953
+    },
+    "Coleridge - Biographia Literaria": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Coleridge - Biographia Literaria.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:31:24.377615",
+      "file_size_mb": 0.5260725021362305
+    },
+    "John Keats - Complete Poems": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:31:40.816567",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Percy Bysshe Shelley - Complete Poems": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:31:59.689886",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Lord Byron - Complete Poems": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:32:16.485300",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "John Donne - Complete Poems": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:32:32.759129",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Andrew Marvell - Selected Poems": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:32:49.260742",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Robert Herrick - Selected Poems": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:33:05.586459",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "George Herbert - The Temple": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:33:24.023296",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Christina Rossetti - Goblin Market and Other Poems": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Christina Rossetti - Goblin Market and Other Poems.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:33:29.223264",
+      "file_size_mb": 0.22058391571044922
+    },
+    "Emily Dickinson - Complete Poems": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Emily Dickinson - Complete Poems.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:33:35.171886",
+      "file_size_mb": 0.4795799255371094
+    },
+    "Walt Whitman - Leaves of Grass": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Walt Whitman - Leaves of Grass.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:33:39.312593",
+      "file_size_mb": 0.8246135711669922
+    },
+    "Henry Wadsworth Longfellow - Selected Poems": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:33:55.853826",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Alfred Lord Tennyson - In Memoriam": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Alfred Lord Tennyson - In Memoriam.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:34:01.071422",
+      "file_size_mb": 0.17922687530517578
+    },
+    "Tennyson - Idylls of the King": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Tennyson - Idylls of the King.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:34:06.568600",
+      "file_size_mb": 0.27227115631103516
+    },
+    "Tennyson - Selected Poems": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:34:23.397557",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Robert Browning - The Ring and the Book": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Robert Browning - The Ring and the Book.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:34:28.726121",
+      "file_size_mb": 0.2977008819580078
+    },
+    "Browning - Selected Poems": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:35:09.610909",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Elizabeth Barrett Browning - Aurora Leigh": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Elizabeth Barrett Browning - Aurora Leigh.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:34:50.963892",
+      "file_size_mb": 0.4048891067504883
+    },
+    "Sophocles - Oedipus Rex (as drama)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:35:26.233360",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Sophocles - Antigone (as drama)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:35:42.426545",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Euripides - Medea (as drama)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:35:58.932379",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Moli\u00e8re - Tartuffe": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Moli\u00e8re - Tartuffe.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:36:03.606540",
+      "file_size_mb": 0.10788440704345703
+    },
+    "Moli\u00e8re - Le Misanthrope": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:36:20.854652",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Moli\u00e8re - The School for Wives": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:36:37.210770",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Pierre Corneille - Le Cid": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Pierre Corneille - Le Cid.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:36:40.734721",
+      "file_size_mb": 0.10189151763916016
+    },
+    "Corneille - Polyeucte": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Corneille - Polyeucte.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:36:44.685891",
+      "file_size_mb": 0.10060691833496094
+    },
+    "Jean Racine - Phaedra": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Jean Racine - Phaedra.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:36:48.898699",
+      "file_size_mb": 0.09514141082763672
+    },
+    "Racine - Andromache": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:37:05.391725",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Gotthold Ephraim Lessing - Nathan the Wise": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Gotthold Ephraim Lessing - Nathan the Wise.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:37:09.422371",
+      "file_size_mb": 0.2698202133178711
+    },
+    "Lessing - Emilia Galotti": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Lessing - Emilia Galotti.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:37:13.453973",
+      "file_size_mb": 0.5781755447387695
+    },
+    "Johann Wolfgang von Goethe - Faust": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Johann Wolfgang von Goethe - Faust.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:37:18.819896",
+      "file_size_mb": 3.360973358154297
+    },
+    "Goethe - Torquato Tasso": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Goethe - Torquato Tasso.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:37:23.683202",
+      "file_size_mb": 0.1346902847290039
+    },
+    "Friedrich Schiller - The Robbers": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Friedrich Schiller - The Robbers.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:37:28.441188",
+      "file_size_mb": 0.4659414291381836
+    },
+    "Schiller - Wallenstein": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Schiller - Wallenstein.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:37:33.521491",
+      "file_size_mb": 0.4528179168701172
+    },
+    "Schiller - William Tell": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:37:49.999535",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Henrik Ibsen - A Doll's House": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Henrik Ibsen - A Doll's House.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:37:53.721237",
+      "file_size_mb": 0.29172706604003906
+    },
+    "Ibsen - Ghosts": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Ibsen - Ghosts.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:37:57.667230",
+      "file_size_mb": 0.1144247055053711
+    },
+    "Ibsen - The Master Builder": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Ibsen - The Master Builder.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:38:01.654635",
+      "file_size_mb": 0.1293630599975586
+    },
+    "August Strindberg - The Father": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/August Strindberg - The Father.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:38:06.850012",
+      "file_size_mb": 0.19015026092529297
+    },
+    "Strindberg - A Dream Play": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:38:23.908587",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Anton Chekhov - The Seagull": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:38:42.154830",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Chekhov - Uncle Vanya": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Chekhov - Uncle Vanya.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:38:54.482878",
+      "file_size_mb": 0.13538837432861328
+    },
+    "Chekhov - The Cherry Orchard": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:39:16.241209",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Chekhov - Three Sisters": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Chekhov - Three Sisters.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:39:19.585008",
+      "file_size_mb": 0.013875961303710938
+    },
+    "George Bernard Shaw - Pygmalion": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:39:36.308624",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Shaw - Saint Joan": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Shaw - Saint Joan.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:39:40.571997",
+      "file_size_mb": 0.6796541213989258
+    },
+    "Shaw - Arms and the Man": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Shaw - Arms and the Man.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:39:44.573490",
+      "file_size_mb": 0.1687450408935547
+    },
+    "Oscar Wilde - The Importance of Being Earnest": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Oscar Wilde - The Importance of Being Earnest.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:39:50.597178",
+      "file_size_mb": 0.29746532440185547
+    },
+    "Wilde - An Ideal Husband": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Wilde - An Ideal Husband.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:39:56.265269",
+      "file_size_mb": 0.1408987045288086
+    },
+    "Michel de Montaigne - Essays": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/essays/Michel de Montaigne - Essays.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:40:07.740680",
+      "file_size_mb": 1.2262897491455078
+    },
+    "Ralph Waldo Emerson - Essays": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/essays/Ralph Waldo Emerson - Essays.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:40:15.830862",
+      "file_size_mb": 0.4006528854370117
+    },
+    "Emerson - Nature": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Emerson - Nature.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:40:20.970319",
+      "file_size_mb": 0.10930824279785156
+    },
+    "Emerson - Self-Reliance": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:40:38.479961",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Henry David Thoreau - Walden": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Henry David Thoreau - Walden.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:40:42.394526",
+      "file_size_mb": 0.6560373306274414
+    },
+    "Thoreau - Civil Disobedience": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Thoreau - Civil Disobedience.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:40:46.908279",
+      "file_size_mb": 0.6560373306274414
+    },
+    "John Stuart Mill - On Liberty": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/John Stuart Mill - On Liberty.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:40:51.318985",
+      "file_size_mb": 0.1893768310546875
+    },
+    "Mill - The Subjection of Women": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Mill - The Subjection of Women.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:40:57.600536",
+      "file_size_mb": 0.17883014678955078
+    },
+    "Mill - Utilitarianism": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Mill - Utilitarianism.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:41:01.376410",
+      "file_size_mb": 0.12619686126708984
+    },
+    "Mill - Considerations on Representative Government": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Mill - Considerations on Representative Government.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:41:06.303315",
+      "file_size_mb": 0.29250144958496094
+    },
+    "Arthur Schopenhauer - The World as Will and Representation (selections)": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Arthur Schopenhauer - The World as Will and Representation (selections).epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:41:20.268387",
+      "file_size_mb": 0.8481369018554688
+    },
+    "Friedrich Nietzsche - Beyond Good and Evil": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Friedrich Nietzsche - Beyond Good and Evil.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:41:25.014574",
+      "file_size_mb": 0.23060989379882812
+    },
+    "Nietzsche - The Genealogy of Morals": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Nietzsche - The Genealogy of Morals.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:41:29.176774",
+      "file_size_mb": 0.24004364013671875
+    },
+    "Nietzsche - Thus Spoke Zarathustra": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:41:45.973886",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Nietzsche - The Gay Science": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:42:02.610924",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "S\u00f8ren Kierkegaard - Fear and Trembling": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:42:19.066744",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Kierkegaard - Sickness Unto Death": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:42:35.338783",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Kierkegaard - Either/Or": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:42:51.657251",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Georg Wilhelm Friedrich Hegel - Phenomenology of Spirit (selections)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:43:08.371225",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Karl Marx - The Communist Manifesto": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Karl Marx - The Communist Manifesto.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:43:13.164462",
+      "file_size_mb": 0.11501216888427734
+    },
+    "Marx - Capital (Vol. 1, selections)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:43:29.768613",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Marx - The German Ideology": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:43:46.064744",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "John Ruskin - Unto This Last": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/John Ruskin - Unto This Last.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:43:50.546212",
+      "file_size_mb": 0.3725595474243164
+    },
+    "Ruskin - The Stones of Venice": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Ruskin - The Stones of Venice.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:43:56.290796",
+      "file_size_mb": 2.460094451904297
+    },
+    "Matthew Arnold - Culture and Anarchy": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Matthew Arnold - Culture and Anarchy.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:44:01.515881",
+      "file_size_mb": 0.22273635864257812
+    },
+    "Walter Pater - The Renaissance": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Walter Pater - The Renaissance.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:44:07.099649",
+      "file_size_mb": 0.21396446228027344
+    },
+    "Oscar Wilde - The Picture of Dorian Gray (as cultural commentary)": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Oscar Wilde - The Picture of Dorian Gray (as cultural commentary).epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:44:11.477751",
+      "file_size_mb": 0.4411735534667969
+    },
+    "Herodotus - The Histories": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:44:28.394569",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Thucydides - History of the Peloponnesian War": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/history/Thucydides - History of the Peloponnesian War.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:44:33.723404",
+      "file_size_mb": 0.5226955413818359
+    },
+    "Polybius - Universal History (selections)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:44:50.438878",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Livy - The History of Rome (selections)": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/history/Livy - The History of Rome (selections).epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:44:55.671144",
+      "file_size_mb": 0.5996761322021484
+    },
+    "Tacitus - The Histories (as history)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:45:12.274574",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Tacitus - The Annals (as history)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:45:28.762380",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Edward Gibbon - The Decline and Fall of the Roman Empire": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/ancient/Edward Gibbon - The Decline and Fall of the Roman Empire.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:45:34.693364",
+      "file_size_mb": 15.695927619934082
+    },
+    "Thomas Babington Macaulay - The History of England": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/history/Thomas Babington Macaulay - The History of England.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:45:40.294780",
+      "file_size_mb": 1.6053094863891602
+    },
+    "Jacob Burckhardt - The Civilization of the Renaissance in Italy": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Jacob Burckhardt - The Civilization of the Renaissance in Italy.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:45:53.496986",
+      "file_size_mb": 5.722405433654785
+    },
+    "Leopold von Ranke - The Latin and Teutonic Nations (selections)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:46:15.717211",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Isaac Newton - Principia Mathematica (selections)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:46:36.644174",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Newton - Opticks (selections)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:46:55.322074",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Nicolaus Copernicus - On the Revolutions of the Celestial Spheres (selections)": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Nicolaus Copernicus - On the Revolutions of the Celestial Spheres (selections).epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:47:04.171670",
+      "file_size_mb": 0.33188533782958984
+    },
+    "Galileo Galilei - Dialogues Concerning Two New Sciences": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:47:21.949210",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Galilei - The Starry Messenger": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:47:38.636301",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Johannes Kepler - Astronomia Nova": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:47:55.113486",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "William Harvey - De Motu Cordis (On the Motion of the Heart)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:48:11.926564",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Robert Boyle - The Skeptical Chymist": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:48:28.113325",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Antoine Lavoisier - Elements of Chemistry": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Antoine Lavoisier - Elements of Chemistry.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:48:41.914948",
+      "file_size_mb": 9.726286888122559
+    },
+    "Charles Darwin - On the Origin of Species": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Charles Darwin - On the Origin of Species.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:48:50.009355",
+      "file_size_mb": 0.4278240203857422
+    },
+    "Darwin - The Descent of Man": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Darwin - The Descent of Man.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:48:54.513075",
+      "file_size_mb": 1.5709781646728516
+    },
+    "Alfred Russel Wallace - The Malay Archipelago": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Alfred Russel Wallace - The Malay Archipelago.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:48:58.783367",
+      "file_size_mb": 0.3372316360473633
+    },
+    "Michael Faraday - Chemical History of a Candle": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/western-canon/history/Michael Faraday - Chemical History of a Candle.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:49:03.668192",
+      "file_size_mb": 0.16439533233642578
+    },
+    "James Clerk Maxwell - A Treatise on Electricity and Magnetism (selections)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:49:21.107014",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Max Planck - The Origin and Development of the Quantum Theory": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Max Planck - The Origin and Development of the Quantum Theory.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:49:31.527633",
+      "file_size_mb": 2.089064598083496
+    },
+    "Niels Bohr - Collected Works": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:49:47.944915",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Werner Heisenberg - Physics and Philosophy": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:50:04.723206",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Erwin Schr\u00f6dinger - What is Life?": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:50:22.697615",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    },
+    "Niccol\u00f2 Machiavelli - The Prince": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Niccol\u00f2 Machiavelli - The Prince.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:50:31.294748",
+      "file_size_mb": 0.20650672912597656
+    },
+    "Jean Bodin - Six Books of the Commonwealth": {
+      "status": "downloaded",
+      "filepath": "/home/lewis/aegis/library/unsorted/Jean Bodin - Six Books of the Commonwealth.epub",
+      "source": "gutenberg",
+      "format": "epub",
+      "downloaded_date": "2026-02-24T12:50:37.399355",
+      "file_size_mb": 2.12917423248291
+    },
+    "Thomas Hobbes - Leviathan (as political philosophy)": {
+      "status": "not_found",
+      "last_searched": "2026-02-24T12:50:54.015236",
+      "sources_tried": [
+        "Gutenberg",
+        "Standard Ebooks",
+        "Internet Archive",
+        "Open Library",
+        "CCEL"
+      ]
+    }
+  },
+  "stats": {
+    "total_downloaded": 200,
+    "total_in_canon": 379,
+    "last_full_cycle": null,
+    "total_size_mb": 224.59763145446777,
+    "search_cycle": 2
+  }
+}

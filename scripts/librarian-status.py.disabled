@@ -1,0 +1,275 @@
+#!/usr/bin/env python3
+"""
+LIBRARIAN Status Dashboard
+Real-time system health and statistics
+"""
+
+import sqlite3
+import json
+import os
+from datetime import datetime, timedelta
+from pathlib import Path
+
+def get_db():
+    return sqlite3.connect("/home/lewis/aegis/data/sentinel.db")
+
+def format_size(bytes_val):
+    """Format bytes to human readable"""
+    for unit in ['B', 'KB', 'MB', 'GB']:
+        if bytes_val < 1024:
+            return f"{bytes_val:.1f} {unit}"
+        bytes_val /= 1024
+    return f"{bytes_val:.1f} TB"
+
+def print_section(title):
+    """Print a formatted section header"""
+    print(f"\n{'─'*70}")
+    print(f"  {title}")
+    print(f"{'─'*70}")
+
+def show_database_stats():
+    """Show database statistics"""
+    print_section("📊 DATABASE STATISTICS")
+
+    db = get_db()
+    cursor = db.cursor()
+
+    # Total acquisitions
+    cursor.execute("SELECT COUNT(*) FROM librarian_acquisitions")
+    total_runs = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM librarian_acquisitions WHERE status='success'")
+    successful_runs = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM librarian_content")
+    total_books = cursor.fetchone()[0]
+
+    cursor.execute("SELECT SUM(file_size_bytes) FROM librarian_content")
+    total_size = cursor.fetchone()[0] or 0
+
+    print(f"  Acquisition Runs:     {total_runs}")
+    print(f"  Successful Runs:      {successful_runs}")
+    print(f"  Total Books Acquired: {total_books}")
+    print(f"  Storage Used:         {format_size(total_size)}")
+
+    # Books by category
+    cursor.execute("""
+        SELECT subject_category, COUNT(*) as count
+        FROM librarian_content
+        GROUP BY subject_category
+        ORDER BY count DESC
+        LIMIT 5
+    """)
+
+    top_cats = cursor.fetchall()
+    if top_cats:
+        print(f"\n  Top Categories:")
+        for cat, count in top_cats:
+            print(f"    • {cat}: {count} books")
+
+    db.close()
+
+def show_recent_activity():
+    """Show recent acquisitions"""
+    print_section("⏰ RECENT ACTIVITY")
+
+    db = get_db()
+    cursor = db.cursor()
+
+    # Last 5 acquisitions
+    cursor.execute("""
+        SELECT title, author, acquired_at
+        FROM librarian_content
+        ORDER BY acquired_at DESC
+        LIMIT 5
+    """)
+
+    books = cursor.fetchall()
+    if books:
+        print(f"  Recent Books:")
+        for title, author, timestamp in books:
+            print(f"    • {title} by {author}")
+            print(f"      {timestamp}")
+    else:
+        print(f"  No books acquired yet")
+
+    # Want list status
+    cursor.execute("""
+        SELECT status, COUNT(*) as count
+        FROM librarian_want_list
+        GROUP BY status
+    """)
+
+    statuses = cursor.fetchall()
+    if statuses:
+        print(f"\n  Want List Status:")
+        for status, count in statuses:
+            print(f"    • {status}: {count} items")
+
+    db.close()
+
+def show_storage_info():
+    """Show storage information"""
+    print_section("💾 STORAGE INFORMATION")
+
+    library_path = "/home/lewis/aegis/library"
+
+    # Physical storage
+    total_files = 0
+    total_bytes = 0
+
+    for root, dirs, files in os.walk(library_path):
+        total_files += len(files)
+        for f in files:
+            try:
+                total_bytes += os.path.getsize(os.path.join(root, f))
+            except:
+                pass
+
+    print(f"  Physical Files:       {total_files}")
+    print(f"  Storage Used:         {format_size(total_bytes)}")
+
+    # Get storage limits from config
+    try:
+        with open('/home/lewis/aegis/config/librarian.config.json', 'r') as f:
+            config = json.load(f)
+
+        limit_gb = config.get('storage', {}).get('storage_limit_gb', 500)
+        limit_bytes = limit_gb * 1024 * 1024 * 1024
+        percent_used = (total_bytes / limit_bytes) * 100
+
+        print(f"  Storage Limit:        {format_size(limit_bytes)}")
+        print(f"  Usage:                {percent_used:.1f}%")
+
+        if percent_used > 95:
+            print(f"  ⚠️  WARNING: Storage nearly full!")
+        elif percent_used > 80:
+            print(f"  ⚠️  ALERT: Storage at {percent_used:.1f}%")
+        else:
+            print(f"  ✅ Storage usage healthy")
+
+    except:
+        pass
+
+    # Category breakdown
+    print(f"\n  Storage by Category:")
+    categories = {}
+    for root, dirs, files in os.walk(library_path):
+        for f in files:
+            cat = os.path.basename(root)
+            fpath = os.path.join(root, f)
+            try:
+                size = os.path.getsize(fpath)
+                categories[cat] = categories.get(cat, 0) + size
+            except:
+                pass
+
+    for cat in sorted(categories.keys(), key=lambda x: categories[x], reverse=True)[:5]:
+        print(f"    • {cat}: {format_size(categories[cat])}")
+
+def show_api_stats():
+    """Show API usage statistics"""
+    print_section("🌐 API STATISTICS")
+
+    db = get_db()
+    cursor = db.cursor()
+
+    # Search history
+    cursor.execute("""
+        SELECT source, COUNT(*) as count
+        FROM librarian_search_history
+        GROUP BY source
+    """)
+
+    searches = cursor.fetchall()
+    if searches:
+        print(f"  API Searches:")
+        for source, count in searches:
+            print(f"    • {source}: {count} searches")
+
+    # Content sources
+    cursor.execute("""
+        SELECT source, COUNT(*) as count
+        FROM librarian_content
+        GROUP BY source
+        ORDER BY count DESC
+    """)
+
+    sources = cursor.fetchall()
+    if sources:
+        print(f"\n  Books by Source:")
+        for source, count in sources:
+            print(f"    • {source}: {count} books")
+
+    db.close()
+
+def show_system_health():
+    """Show system health"""
+    print_section("🔧 SYSTEM HEALTH")
+
+    db = get_db()
+    cursor = db.cursor()
+
+    # Check for errors
+    cursor.execute("SELECT COUNT(*) FROM librarian_content WHERE error_count > 0")
+    error_count = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM librarian_escalations WHERE resolved_at IS NULL")
+    unresolved = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM librarian_acquisitions WHERE status='failure'")
+    failed_runs = cursor.fetchone()[0]
+
+    print(f"  Failed Downloads:     {error_count}")
+    print(f"  Unresolved Issues:    {unresolved}")
+    print(f"  Failed Runs:          {failed_runs}")
+
+    if error_count == 0 and unresolved == 0 and failed_runs == 0:
+        print(f"\n  ✅ System Status: HEALTHY")
+    else:
+        print(f"\n  ⚠️  System Status: NEEDS ATTENTION")
+        if error_count > 0:
+            print(f"     Check failed downloads")
+        if unresolved > 0:
+            print(f"     Resolve escalated issues")
+
+    db.close()
+
+def show_next_steps():
+    """Show next steps"""
+    print_section("📋 NEXT STEPS")
+
+    print(f"  ✅ Infrastructure:     COMPLETE")
+    print(f"  ✅ Configuration:      COMPLETE")
+    print(f"  ⏳ n8n Import:         PENDING")
+    print(f"  ⏳ Test Workflows:     PENDING")
+    print(f"  ⏳ Enable Schedule:    PENDING")
+
+    print(f"\n  To Continue:")
+    print(f"    1. Get n8n API key from http://localhost:5678")
+    print(f"    2. Provide key to complete workflow import")
+    print(f"    3. Or manually import via n8n UI (~5 min)")
+
+def main():
+    """Run the dashboard"""
+    print("\n" + "="*70)
+    print("🏛️  LIBRARIAN STATUS DASHBOARD")
+    print("="*70)
+    print(f"  Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+
+    try:
+        show_database_stats()
+        show_recent_activity()
+        show_storage_info()
+        show_api_stats()
+        show_system_health()
+        show_next_steps()
+
+        print("\n" + "="*70 + "\n")
+
+    except Exception as e:
+        print(f"\n❌ Error: {e}")
+        print("\nMake sure you're in the aegis directory and the database exists.")
+
+if __name__ == "__main__":
+    main()

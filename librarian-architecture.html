@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Librarian Agent — Architecture</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #0f1117;
+    color: #e2e8f0;
+    padding: 40px 32px;
+    min-height: 100vh;
+  }
+  h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 48px;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── GRID ── */
+  .diagram {
+    display: grid;
+    grid-template-columns: 200px 60px 260px 60px 200px 60px 200px;
+    grid-template-rows: auto;
+    gap: 0;
+    align-items: center;
+    justify-items: center;
+  }
+
+  /* ── COLUMNS ── */
+  .col { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+
+  /* ── BOXES ── */
+  .box {
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 12.5px;
+    line-height: 1.5;
+    border: 1px solid transparent;
+    width: 100%;
+  }
+  .box-title {
+    font-weight: 700;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    opacity: 0.7;
+  }
+  .box-main {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 4px;
+    color: #f1f5f9;
+  }
+  .box-detail {
+    font-size: 11px;
+    color: #94a3b8;
+    line-height: 1.4;
+  }
+
+  /* colour themes */
+  .amber  { background: #1c1506; border-color: #78350f; }
+  .amber .box-title { color: #d97706; }
+  .blue   { background: #050d1f; border-color: #1e3a5f; }
+  .blue .box-title  { color: #3b82f6; }
+  .purple { background: #110c1f; border-color: #3b1f6e; }
+  .purple .box-title{ color: #a855f7; }
+  .teal   { background: #041714; border-color: #134e4a; }
+  .teal .box-title  { color: #14b8a6; }
+  .rose   { background: #1a0609; border-color: #6b1a2a; }
+  .rose .box-title  { color: #f43f5e; }
+  .slate  { background: #0d1117; border-color: #1e293b; }
+  .slate .box-title { color: #64748b; }
+  .green  { background: #051208; border-color: #14532d; }
+  .green .box-title { color: #22c55e; }
+
+  /* section labels */
+  .layer-label {
+    writing-mode: horizontal-tb;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #334155;
+    text-align: center;
+    padding: 8px 0;
+  }
+
+  /* ── ARROWS ── */
+  .arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .arrow-line {
+    width: 36px;
+    height: 1px;
+    background: linear-gradient(90deg, #334155, #475569);
+    position: relative;
+  }
+  .arrow-line::after {
+    content: '';
+    position: absolute;
+    right: -1px;
+    top: -4px;
+    border-left: 6px solid #475569;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+  }
+  .arrow-label {
+    font-size: 9px;
+    color: #475569;
+    text-align: center;
+    white-space: nowrap;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── VERTICAL ARROW ── */
+  .v-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 4px 0;
+  }
+  .v-arrow-line {
+    width: 1px;
+    height: 20px;
+    background: linear-gradient(180deg, #334155, #475569);
+    position: relative;
+  }
+  .v-arrow-line::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: -4px;
+    border-top: 6px solid #475569;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+  }
+  .v-arrow-label {
+    font-size: 9px;
+    color: #475569;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  /* ── SECTION WRAPPER ── */
+  .section {
+    padding: 20px 16px;
+    border-radius: 14px;
+    border: 1px solid #1e293b;
+    background: #0b0f18;
+    width: 100%;
+  }
+  .section-title {
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #1e293b;
+  }
+
+  /* ── FULL-WIDTH ROW ── */
+  .full-row {
+    grid-column: 1 / -1;
+    width: 100%;
+    margin: 24px 0 16px;
+  }
+  .divider-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #334155;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .divider-label::before,
+  .divider-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #1e293b;
+  }
+
+  /* bottom legend */
+  .legend {
+    margin-top: 48px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    background: #0b0f18;
+    border-radius: 10px;
+    border: 1px solid #1e293b;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    color: #94a3b8;
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  /* flow wrapper — horizontal strip */
+  .flow {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    width: 100%;
+  }
+  .flow-col {
+    flex: 0 0 auto;
+  }
+  .flow-arrow {
+    flex: 0 0 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 36px; /* vertically align with first box */
+  }
+
+  /* notification sidebar */
+  .side-note {
+    font-size: 10.5px;
+    color: #64748b;
+    padding: 8px 12px;
+    background: #0d1117;
+    border: 1px dashed #1e293b;
+    border-radius: 8px;
+    line-height: 1.5;
+    text-align: center;
+  }
+  .side-note strong { color: #94a3b8; display: block; margin-bottom: 2px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; }
+</style>
+</head>
+<body>
+
+<h1>📚 Librarian Agent — System Architecture</h1>
+<p class="subtitle">St. John's Great Books Canon · 251 works · 15 books/hour · Autonomous 24/7 Operation</p>
+
+<!-- ═══════════════════════════════════════════════
+     TOP ROW: INPUTS
+═══════════════════════════════════════════════ -->
+<div class="flow" style="align-items:stretch; gap:12px; margin-bottom: 12px;">
+
+  <!-- INPUT 1: Canon -->
+  <div class="flow-col" style="flex:1;">
+    <div class="section">
+      <div class="section-title" style="color:#d97706;">📖 Canon Queue Input</div>
+      <div class="box amber" style="margin-bottom:10px;">
+        <div class="box-title">Source File</div>
+        <div class="box-main">ST_JOHNS_GREAT_BOOKS_CANON.txt</div>
+        <div class="box-detail">251 works · Ancient → 20th Century<br>Organized by subject &amp; era</div>
+      </div>
+      <div class="v-arrow" style="margin: 0 auto 10px;">
+        <div class="v-arrow-line"></div>
+        <div class="v-arrow-label">15 / hour</div>
+      </div>
+      <div class="box amber">
+        <div class="box-title">Scheduler Script</div>
+        <div class="box-main">librarian-canon-scheduler.py</div>
+        <div class="box-detail">Tracks index · Batches 15 works/hr<br>Persists progress in JSON config</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow" style="padding-top:70px; flex: 0 0 40px; flex-direction: column; align-items:center; gap:4px;">
+    <div class="arrow-line"></div>
+  </div>
+
+  <!-- INPUT 2: Want List DB -->
+  <div class="flow-col" style="flex:1;">
+    <div class="section">
+      <div class="section-title" style="color:#a855f7;">🗃️ Want List (SQLite)</div>
+      <div class="box purple">
+        <div class="box-title">Database Table</div>
+        <div class="box-main">librarian_want_list</div>
+        <div class="box-detail">status: pending → acquired<br>priority · search_query · category</div>
+      </div>
+      <div class="v-arrow" style="margin: 10px auto;">
+        <div class="v-arrow-line"></div>
+        <div class="v-arrow-label">monitored</div>
+      </div>
+      <div class="box purple">
+        <div class="box-title">n8n Workflow</div>
+        <div class="box-main">Want List Monitor</div>
+        <div class="box-detail">Polls for pending items<br>Triggers download on new entries</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow" style="padding-top:70px; flex: 0 0 40px;">
+    <div class="arrow-line"></div>
+  </div>
+
+  <!-- INPUT 3: Manual -->
+  <div class="flow-col" style="flex:0.75;">
+    <div class="section">
+      <div class="section-title" style="color:#64748b;">🖥️ Manual Input</div>
+      <div class="box slate">
+        <div class="box-title">CLI</div>
+        <div class="box-main">librarian-cli.py</div>
+        <div class="box-detail">--search, --add-want<br>--status, --validate</div>
+      </div>
+      <div class="v-arrow" style="margin: 10px auto;">
+        <div class="v-arrow-line"></div>
+      </div>
+      <div class="box slate">
+        <div class="box-title">n8n Manual Workflow</div>
+        <div class="box-main">Manual Search</div>
+        <div class="box-detail">On-demand trigger</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     CORE AGENT
+═══════════════════════════════════════════════ -->
+<div style="display:flex; align-items:center; gap:8px; margin: 8px 0;">
+  <div style="flex:1; height:1px; background:#1e293b;"></div>
+  <div style="font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#334155;">Core Agent</div>
+  <div style="flex:1; height:1px; background:#1e293b;"></div>
+</div>
+
+<div class="section" style="border-color:#1e3a5f; background:#050c1a; margin-bottom:12px;">
+  <div class="section-title" style="color:#3b82f6;">🤖 librarian-agent.py &nbsp;·&nbsp; librarian-download-hourly.py</div>
+  <div style="display:flex; gap:12px;">
+
+    <div style="flex:1;">
+      <div class="box blue">
+        <div class="box-title">1 · Discovery</div>
+        <div class="box-main">Multi-Source Search</div>
+        <div class="box-detail">Queries 3 APIs in parallel<br>Respects rate limits (1–2 s)</div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; color:#334155; font-size:18px; padding: 0 4px;">›</div>
+    <div style="flex:1;">
+      <div class="box blue">
+        <div class="box-title">2 · Validation</div>
+        <div class="box-main">Integrity Check</div>
+        <div class="box-detail">SHA-256 dedup · Format check<br>Fuzzy match 85% threshold</div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; color:#334155; font-size:18px; padding: 0 4px;">›</div>
+    <div style="flex:1;">
+      <div class="box blue">
+        <div class="box-title">3 · Cataloging</div>
+        <div class="box-main">Metadata + Ollama</div>
+        <div class="box-detail">Title · Author · Category<br>Ollama mistral:7b analysis</div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; color:#334155; font-size:18px; padding: 0 4px;">›</div>
+    <div style="flex:1;">
+      <div class="box blue">
+        <div class="box-title">4 · Storage</div>
+        <div class="box-main">Organized to Disk</div>
+        <div class="box-detail">great-books/{era}/{title}.epub<br>State JSON updated</div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; color:#334155; font-size:18px; padding: 0 4px;">›</div>
+    <div style="flex:1;">
+      <div class="box blue">
+        <div class="box-title">5 · Retry Logic</div>
+        <div class="box-main">Resilience Layer</div>
+        <div class="box-detail">3 retries · 5s → 15s → 60s<br>Alert after 3 consecutive fails</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SOURCES ROW
+═══════════════════════════════════════════════ -->
+<div style="display:flex; align-items:center; gap:8px; margin: 8px 0;">
+  <div style="flex:1; height:1px; background:#1e293b;"></div>
+  <div style="font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#334155;">Discovery Sources</div>
+  <div style="flex:1; height:1px; background:#1e293b;"></div>
+</div>
+
+<div style="display:flex; gap:12px; margin-bottom:12px;">
+  <div style="flex:1;" class="box teal">
+    <div class="box-title">Project Gutenberg</div>
+    <div class="box-main">gutendex.com/books</div>
+    <div class="box-detail">70,000+ public domain books<br>Free · No auth · 1s rate limit<br>Preferred format: PDF</div>
+  </div>
+  <div style="flex:1;" class="box teal">
+    <div class="box-title">Internet Archive</div>
+    <div class="box-main">archive.org/advancedsearch</div>
+    <div class="box-detail">Full-text search · Metadata rich<br>Free · No auth · 2s rate limit</div>
+  </div>
+  <div style="flex:1;" class="box teal">
+    <div class="box-title">Open Library</div>
+    <div class="box-main">openlibrary.org/api/search</div>
+    <div class="box-detail">Comprehensive catalog<br>Multiple formats · 1.5s rate limit</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     OUTPUTS ROW
+═══════════════════════════════════════════════ -->
+<div style="display:flex; align-items:center; gap:8px; margin: 8px 0;">
+  <div style="flex:1; height:1px; background:#1e293b;"></div>
+  <div style="font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#334155;">Outputs &amp; Monitoring</div>
+  <div style="flex:1; height:1px; background:#1e293b;"></div>
+</div>
+
+<div style="display:flex; gap:12px; margin-bottom:12px;">
+
+  <div style="flex:2;" class="box green">
+    <div class="box-title">📁 Private Library on Disk</div>
+    <div class="box-main">great-books/{era}/{title}_{author}.epub</div>
+    <div class="box-detail">
+      ancient/ · medieval/ · renaissance/ · enlightenment/<br>
+      19th-century/ · 20th-century/ · poetry/ · theology/ · science/ · music/ · history/
+    </div>
+  </div>
+
+  <div style="flex:1;" class="box green">
+    <div class="box-title">🗄️ State File</div>
+    <div class="box-main">librarian-state.json</div>
+    <div class="box-detail">SHA-256 hashes · metadata<br>Dedup across restarts<br>500 GB storage limit</div>
+  </div>
+
+  <div style="flex:1;" class="box rose">
+    <div class="box-title">🔔 Discord Notifications</div>
+    <div class="box-main">#librarian channel</div>
+    <div class="box-detail">Download success · failures<br>Canon progress bar<br>Hourly status embeds</div>
+  </div>
+
+  <div style="flex:1;" class="box rose">
+    <div class="box-title">📋 Logs</div>
+    <div class="box-main">librarian.log</div>
+    <div class="box-detail">All operations logged<br>journalctl via systemd<br>Consecutive-fail alerts</div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     AUTOMATION LAYER
+═══════════════════════════════════════════════ -->
+<div style="display:flex; align-items:center; gap:8px; margin: 8px 0;">
+  <div style="flex:1; height:1px; background:#1e293b;"></div>
+  <div style="font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#334155;">Automation &amp; Scheduling</div>
+  <div style="flex:1; height:1px; background:#1e293b;"></div>
+</div>
+
+<div style="display:flex; gap:12px;">
+  <div style="flex:1;" class="box slate">
+    <div class="box-title">⚙️ systemd Service</div>
+    <div class="box-main">aegis-librarian.service</div>
+    <div class="box-detail">24/7 background daemon<br>Auto-restart on failure<br>Graceful shutdown handling</div>
+  </div>
+  <div style="flex:1;" class="box slate">
+    <div class="box-title">🔄 n8n: Daily Acquisition</div>
+    <div class="box-main">Runs at 2:00 AM</div>
+    <div class="box-detail">Main daily download cycle<br>Up to 20 books per cycle</div>
+  </div>
+  <div style="flex:1;" class="box amber">
+    <div class="box-title">⏱️ n8n: Canon Queue</div>
+    <div class="box-main">Every 60 minutes</div>
+    <div class="box-detail">Pushes 15 canon works/hr<br>to want list · Discord update</div>
+  </div>
+  <div style="flex:1;" class="box slate">
+    <div class="box-title">👁️ n8n: Want List Monitor</div>
+    <div class="box-main">On new entry</div>
+    <div class="box-detail">Watches for pending items<br>Fires download immediately</div>
+  </div>
+  <div style="flex:1;" class="box slate">
+    <div class="box-title">🔍 n8n: Manual Search</div>
+    <div class="box-main">On-demand trigger</div>
+    <div class="box-detail">CLI or manual n8n trigger<br>Immediate targeted search</div>
+  </div>
+</div>
+
+<!-- legend -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#78350f;"></div>Canon / Scheduling</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#3b1f6e;"></div>Want List / Database</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#1e3a5f;"></div>Core Agent Pipeline</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#134e4a;"></div>External Sources / Storage</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#6b1a2a;"></div>Notifications / Monitoring</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#1e293b;"></div>Automation / Scheduling</div>
+  <div class="legend-item" style="margin-left:auto; font-style:italic; color:#475569;">Librarian Agent v1.0 · Lewis Stone · 2026</div>
+</div>
+
+</body>
+</html>

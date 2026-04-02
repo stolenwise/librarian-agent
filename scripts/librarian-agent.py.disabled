@@ -1,0 +1,757 @@
+#!/usr/bin/env python3
+"""
+LIBRARIAN AGENT v1.0
+Autonomously discovers, downloads, catalogs, and organizes public domain books.
+
+Searches all major free ebook sources systematically.
+Only notifies Discord on successful downloads.
+Maintains persistent state across runs.
+Runs 24/7 as systemd service.
+"""
+
+import os
+import json
+import time
+import requests
+import hashlib
+from datetime import datetime
+from pathlib import Path
+from typing import Optional, Dict, List, Tuple
+import logging
+import signal
+
+# Configuration
+AEGIS_HOME = Path(os.environ.get('AEGIS_HOME', os.path.expanduser('~/aegis')))
+LIBRARY_PATH = Path(os.environ.get('LIBRARIAN_PATH', AEGIS_HOME / 'library'))
+STATE_FILE = AEGIS_HOME / 'data' / 'sqlite' / 'librarian-state.json'
+LOG_FILE = AEGIS_HOME / 'logs' / 'agents' / 'librarian.log'
+CANON_FILE = Path(os.path.expanduser('~/Desktop/Private Library/ST_JOHNS_GREAT_BOOKS_CANON.txt'))
+
+# Discord webhook - load from .env
+DISCORD_WEBHOOK = None
+try:
+    with open(AEGIS_HOME / 'config' / '.env') as f:
+        for line in f:
+            if line.startswith('DISCORD_WEBHOOK_LIBRARIAN='):
+                DISCORD_WEBHOOK = line.split('=', 1)[1].strip()
+                break
+except:
+    pass
+
+# Create directories
+LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+LIBRARY_PATH.mkdir(parents=True, exist_ok=True)
+
+# Setup logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    handlers=[
+        logging.FileHandler(LOG_FILE),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+
+# Rate limiting
+REQUEST_TIMEOUT = (10, 30)  # connect, read
+RATE_LIMIT_DELAY = 1.0  # seconds between requests
+SOURCES_DELAY = 2.0  # seconds between different sources
+USER_AGENT = 'AEGIS-Librarian/1.0 (Private Library Builder; +https://github.com)'
+
+# Category mapping for organizing files (St. John's Great Books Canon)
+CATEGORY_MAP = {
+    'THEOLOGY': 'great-books/theology',
+    'AQUINAS': 'great-books/theology',
+    'AUGUSTINE': 'great-books/theology',
+    'MAIMONIDES': 'great-books/theology',
+    'MEDIEVAL': 'great-books/medieval',
+    'DANTE': 'great-books/medieval',
+    'CHAUCER': 'great-books/medieval',
+    'GREEK': 'great-books/ancient',
+    'PLATO': 'great-books/ancient',
+    'ARISTOTLE': 'great-books/ancient',
+    'HOMER': 'great-books/ancient',
+    'ROMAN': 'great-books/ancient',
+    'SHAKESPEARE': 'great-books/renaissance',
+    'MILTON': 'great-books/renaissance',
+    'CERVANTES': 'great-books/renaissance',
+    'MONTAIGNE': 'great-books/renaissance',
+    'ENLIGHTENMENT': 'great-books/enlightenment',
+    'DESCARTES': 'great-books/enlightenment',
+    'LOCKE': 'great-books/enlightenment',
+    'ROUSSEAU': 'great-books/enlightenment',
+    'KANT': 'great-books/enlightenment',
+    'NEWTON': 'great-books/enlightenment',
+    'AUSTEN': 'great-books/19th-century',
+    'ELIOT': 'great-books/19th-century',
+    'DOSTOEVSKY': 'great-books/19th-century',
+    'TOLSTOY': 'great-books/19th-century',
+    'DARWIN': 'great-books/19th-century',
+    'MARX': 'great-books/19th-century',
+    'NIETZSCHE': 'great-books/19th-century',
+    'WOOLF': 'great-books/20th-century',
+    'MORRISON': 'great-books/20th-century',
+    'FAULKNER': 'great-books/20th-century',
+    'FREUD': 'great-books/20th-century',
+    'HEIDEGGER': 'great-books/20th-century',
+    'POETRY': 'great-books/poetry',
+    'MUSIC': 'great-books/music',
+    'ESSAY': 'great-books/essays',
+    'HISTORY': 'great-books/history',
+    'SCIENCE': 'great-books/science',
+}
+
+
+class LibrarianState:
+    """Manages persistent state of LIBRARIAN agent."""
+
+    def __init__(self):
+        self.state_file = STATE_FILE
+        self.load()
+
+    def load(self):
+        """Load state from JSON file."""
+        if self.state_file.exists():
+            try:
+                with open(self.state_file) as f:
+                    data = json.load(f)
+                    self.books = data.get('books', {})
+                    self.stats = data.get('stats', {
+                        'total_downloaded': 0,
+                        'total_in_canon': 0,
+                        'last_full_cycle': None,
+                        'total_size_mb': 0.0,
+                        'search_cycle': 0,
+                    })
+            except Exception as e:
+                logger.error(f"Error loading state: {e}")
+                self.books = {}
+                self.stats = {
+                    'total_downloaded': 0,
+                    'total_in_canon': 0,
+                    'last_full_cycle': None,
+                    'total_size_mb': 0.0,
+                    'search_cycle': 0,
+                }
+        else:
+            self.books = {}
+            self.stats = {
+                'total_downloaded': 0,
+                'total_in_canon': 0,
+                'last_full_cycle': None,
+                'total_size_mb': 0.0,
+                'search_cycle': 0,
+            }
+
+    def save(self):
+        """Save state to JSON file."""
+        try:
+            with open(self.state_file, 'w') as f:
+                json.dump({
+                    'books': self.books,
+                    'stats': self.stats,
+                }, f, indent=2)
+        except Exception as e:
+            logger.error(f"Error saving state: {e}")
+
+    def get_category(self, title: str, author: str) -> str:
+        """Determine category from title and author."""
+        search_text = f"{title} {author}".upper()
+
+        for key, category in CATEGORY_MAP.items():
+            if key in search_text:
+                return category
+
+        return 'unsorted'
+
+    def get_book_key(self, title: str, author: str) -> str:
+        """Generate unique key for book."""
+        return f"{author} - {title}".strip()
+
+    def mark_downloaded(self, title: str, author: str, filepath: str, source: str, format: str, file_size_mb: float):
+        """Mark book as downloaded."""
+        key = self.get_book_key(title, author)
+        self.books[key] = {
+            'status': 'downloaded',
+            'filepath': str(filepath),
+            'source': source,
+            'format': format,
+            'downloaded_date': datetime.now().isoformat(),
+            'file_size_mb': file_size_mb,
+        }
+        self.stats['total_downloaded'] += 1
+        self.stats['total_size_mb'] += file_size_mb
+        self.save()
+
+    def mark_not_found(self, title: str, author: str, sources_tried: List[str]):
+        """Mark book as not found in this cycle."""
+        key = self.get_book_key(title, author)
+        self.books[key] = {
+            'status': 'not_found',
+            'last_searched': datetime.now().isoformat(),
+            'sources_tried': sources_tried,
+        }
+        self.save()
+
+    def is_already_downloaded(self, title: str, author: str) -> bool:
+        """Check if book already downloaded."""
+        key = self.get_book_key(title, author)
+        return key in self.books and self.books[key].get('status') == 'downloaded'
+
+
+class SourceAPI:
+    """Base class for book sources."""
+
+    def __init__(self, name: str):
+        self.name = name
+
+    def search(self, title: str, author: str) -> Optional[Tuple[str, str, str]]:
+        """
+        Search for book.
+        Returns: (download_url, format, source_name) or None
+        """
+        raise NotImplementedError
+
+    def _get(self, url: str, **kwargs) -> Optional[requests.Response]:
+        """Make GET request with proper headers and error handling."""
+        try:
+            headers = kwargs.pop('headers', {})
+            headers['User-Agent'] = USER_AGENT
+            resp = requests.get(
+                url,
+                timeout=REQUEST_TIMEOUT,
+                headers=headers,
+                **kwargs
+            )
+            time.sleep(RATE_LIMIT_DELAY)
+            return resp if resp.status_code == 200 else None
+        except Exception as e:
+            logger.debug(f"{self.name} request failed: {e}")
+            return None
+
+
+class GutendexAPI(SourceAPI):
+    """Project Gutenberg via Gutendex API."""
+
+    def __init__(self):
+        super().__init__('Gutenberg')
+
+    def search(self, title: str, author: str) -> Optional[Tuple[str, str, str]]:
+        """Search Gutendex for book."""
+        search_query = f"{title} {author}".replace(' ', '+')
+        url = f"https://gutendex.com/books?search={search_query}"
+
+        resp = self._get(url)
+        if not resp:
+            return None
+
+        try:
+            data = resp.json()
+            results = data.get('results', [])
+            if not results:
+                return None
+
+            book = results[0]
+            formats = book.get('formats', {})
+
+            # Prefer EPUB (application/epub+zip), then plain text
+            for key, dl_url in formats.items():
+                # EPUB format (Gutendex returns application/epub+zip)
+                if 'epub' in key.lower():
+                    return (dl_url, 'epub', 'gutenberg')
+                # Plain text as fallback (convert to txt)
+                if 'text/plain' in key.lower():
+                    return (dl_url, 'txt', 'gutenberg')
+
+            return None
+        except Exception as e:
+            logger.debug(f"Gutendex parse error: {e}")
+            return None
+
+
+class StandardEbooksAPI(SourceAPI):
+    """Standard Ebooks source."""
+
+    def __init__(self):
+        super().__init__('Standard Ebooks')
+
+    def search(self, title: str, author: str) -> Optional[Tuple[str, str, str]]:
+        """Search Standard Ebooks."""
+        # Note: Standard Ebooks has limited public API
+        # Attempting direct OPDS catalog search
+        try:
+            # Try to find in OPDS feed
+            url = "https://standardebooks.org/opds/all"
+            resp = self._get(url)
+            if not resp:
+                return None
+
+            # Look for book in response (simplified)
+            if title.lower() in resp.text.lower():
+                # Try constructing direct download link
+                slug = title.lower().replace(' ', '-')
+                author_slug = author.lower().replace(' ', '-') if author else ''
+                epub_url = f"https://standardebooks.org/ebooks/{author_slug}/{slug}/downloads/{slug}.epub"
+
+                # Verify URL exists
+                check = self._get(epub_url, allow_redirects=True)
+                if check:
+                    return (epub_url, 'epub', 'standardebooks')
+
+            return None
+        except Exception as e:
+            logger.debug(f"Standard Ebooks error: {e}")
+            return None
+
+
+class InternetArchiveAPI(SourceAPI):
+    """Internet Archive book source."""
+
+    def __init__(self):
+        super().__init__('Internet Archive')
+
+    def search(self, title: str, author: str) -> Optional[Tuple[str, str, str]]:
+        """Search Internet Archive for book."""
+        search_query = f"{title} {author}".replace(' ', '+')
+        url = f"https://archive.org/advancedsearch.php?q={search_query}&mediatype=texts&output=json&rows=5"
+
+        resp = self._get(url)
+        if not resp:
+            return None
+
+        try:
+            data = resp.json()
+            docs = data.get('response', {}).get('docs', [])
+            if not docs:
+                return None
+
+            # Try each result
+            for doc in docs:
+                identifier = doc.get('identifier')
+                if identifier:
+                    result = self._get_files(identifier)
+                    if result:
+                        return result
+
+            return None
+        except Exception as e:
+            logger.debug(f"Archive.org search error: {e}")
+            return None
+
+    def _get_files(self, identifier: str) -> Optional[Tuple[str, str, str]]:
+        """Get file list for identifier."""
+        try:
+            url = f"https://archive.org/metadata/{identifier}"
+            resp = self._get(url)
+            if not resp:
+                return None
+
+            data = resp.json()
+            files = data.get('files', [])
+
+            # Prefer PDF, then EPUB
+            for f in files:
+                fname = f.get('name', '')
+                if fname.endswith('.pdf'):
+                    return (f"https://archive.org/download/{identifier}/{fname}", 'pdf', 'archive.org')
+
+            for f in files:
+                fname = f.get('name', '')
+                if fname.endswith('.epub'):
+                    return (f"https://archive.org/download/{identifier}/{fname}", 'epub', 'archive.org')
+
+            return None
+        except Exception as e:
+            logger.debug(f"Archive.org metadata error: {e}")
+            return None
+
+
+class OpenLibraryAPI(SourceAPI):
+    """Open Library API."""
+
+    def __init__(self):
+        super().__init__('Open Library')
+
+    def search(self, title: str, author: str) -> Optional[Tuple[str, str, str]]:
+        """Search Open Library."""
+        url = f"https://openlibrary.org/search.json?title={title.replace(' ', '+')}&author={author.replace(' ', '+')}"
+
+        resp = self._get(url)
+        if not resp:
+            return None
+
+        try:
+            data = resp.json()
+            docs = data.get('docs', [])
+            if not docs:
+                return None
+
+            # Try to find ebook
+            for doc in docs:
+                ebook_access = doc.get('ebook_access')
+                if ebook_access == 'open':
+                    key = doc.get('key')
+                    if key:
+                        # Redirect to archive.org
+                        url = f"https://openlibrary.org{key}.json"
+                        resp = self._get(url)
+                        if resp:
+                            book_data = resp.json()
+                            identifiers = book_data.get('identifiers', {})
+                            archive_id = identifiers.get('librarything', [None])[0]
+                            if archive_id:
+                                # Use Internet Archive directly
+                                archive_api = InternetArchiveAPI()
+                                return archive_api._get_files(archive_id)
+
+            return None
+        except Exception as e:
+            logger.debug(f"Open Library error: {e}")
+            return None
+
+
+class CCELLibraryAPI(SourceAPI):
+    """Christian Classics Ethereal Library (CCEL) - for theology texts."""
+
+    def __init__(self):
+        super().__init__('CCEL')
+
+    def search(self, title: str, author: str) -> Optional[Tuple[str, str, str]]:
+        """Search CCEL for Christian texts."""
+        # CCEL requires HTML parsing and is less API-friendly
+        # Attempt direct URL construction for common works
+        author_lower = author.lower().replace(' ', '')
+        common_books = {
+            'institutes': ('calvin', 'Institutes'),
+            'summa': ('aquinas', 'Summa'),
+            'confessions': ('augustine', 'Confessions'),
+            'city of god': ('augustine', 'CityOfGod'),
+        }
+
+        title_lower = title.lower()
+        for book_key, (author_key, path) in common_books.items():
+            if book_key in title_lower and author_key in author_lower:
+                url = f"https://www.ccel.org/ccel/{author_key}/{path.lower()}.pdf"
+                resp = self._get(url)
+                if resp:
+                    return (url, 'pdf', 'ccel')
+
+        return None
+
+
+class FileValidator:
+    """Validates downloaded files."""
+
+    @staticmethod
+    def is_valid_epub(filepath: Path) -> bool:
+        """Check if file is valid EPUB."""
+        try:
+            with open(filepath, 'rb') as f:
+                header = f.read(4)
+                # EPUB is ZIP format with specific structure
+                return header.startswith(b'PK\x03\x04')
+        except:
+            return False
+
+    @staticmethod
+    def is_valid_pdf(filepath: Path) -> bool:
+        """Check if file is valid PDF."""
+        try:
+            with open(filepath, 'rb') as f:
+                header = f.read(4)
+                return header.startswith(b'%PDF')
+        except:
+            return False
+
+    @staticmethod
+    def is_valid(filepath: Path, format: str) -> bool:
+        """Validate file format."""
+        if format == 'epub':
+            return FileValidator.is_valid_epub(filepath)
+        elif format == 'pdf':
+            return FileValidator.is_valid_pdf(filepath)
+        elif format == 'txt':
+            # Text files just need to exist and be non-empty
+            try:
+                return filepath.stat().st_size > 0
+            except:
+                return False
+        return False
+
+
+class LibrarianAgent:
+    """Main LIBRARIAN agent."""
+
+    def __init__(self):
+        self.state = LibrarianState()
+        self.sources = [
+            GutendexAPI(),
+            StandardEbooksAPI(),
+            InternetArchiveAPI(),
+            OpenLibraryAPI(),
+            CCELLibraryAPI(),
+        ]
+        self.session = requests.Session()
+        self.should_stop = False
+
+        # Signal handlers for graceful shutdown
+        signal.signal(signal.SIGTERM, self._signal_handler)
+        signal.signal(signal.SIGINT, self._signal_handler)
+
+    def _signal_handler(self, sig, frame):
+        """Handle shutdown signals."""
+        logger.info("Received shutdown signal, exiting gracefully...")
+        self.should_stop = True
+
+    def load_canon(self) -> List[Tuple[str, str]]:
+        """Load canon list from file."""
+        books = []
+        current_section = ""
+
+        try:
+            with open(CANON_FILE, 'r', encoding='utf-8') as f:
+                for line in f:
+                    line = line.strip()
+
+                    if not line or line.startswith('='):
+                        continue
+
+                    # Track section headers
+                    if all(w.isupper() or w in ['-', '&'] for w in line.split()):
+                        current_section = line
+                        continue
+
+                    # Skip indented lines
+                    if line.startswith(' '):
+                        continue
+
+                    # Parse book entry (format: "Author - Title")
+                    if ' - ' in line:
+                        parts = line.split(' - ', 1)
+                        author, title = parts[0].strip(), parts[1].strip()
+                        books.append((title, author))
+                    elif line:
+                        # Single name
+                        books.append((line, "Unknown"))
+
+            logger.info(f"Loaded {len(books)} books from canon")
+            self.state.stats['total_in_canon'] = len(books)
+            return books
+
+        except Exception as e:
+            logger.error(f"Error loading canon: {e}")
+            return []
+
+    def search_book(self, title: str, author: str) -> Optional[Tuple[str, str, str]]:
+        """Search all sources for book."""
+        sources_tried = []
+
+        for source in self.sources:
+            sources_tried.append(source.name)
+            logger.debug(f"Searching {source.name} for: {title} by {author}")
+
+            result = source.search(title, author)
+            if result:
+                logger.info(f"Found {title} on {source.name}")
+                return result
+
+            time.sleep(SOURCES_DELAY)
+
+        logger.debug(f"Book not found on any source: {title} by {author}")
+        return None
+
+    def download_file(self, url: str, filepath: Path) -> bool:
+        """Download file from URL."""
+        try:
+            resp = requests.get(
+                url,
+                timeout=(10, 60),
+                headers={'User-Agent': USER_AGENT},
+                stream=True
+            )
+
+            if resp.status_code != 200:
+                logger.debug(f"Download failed: HTTP {resp.status_code}")
+                return False
+
+            filepath.parent.mkdir(parents=True, exist_ok=True)
+
+            with open(filepath, 'wb') as f:
+                for chunk in resp.iter_content(chunk_size=8192):
+                    if chunk:
+                        f.write(chunk)
+
+            # Verify file
+            if filepath.stat().st_size < 1000:
+                logger.debug(f"Downloaded file too small: {filepath.stat().st_size} bytes")
+                filepath.unlink()
+                return False
+
+            return True
+
+        except Exception as e:
+            logger.debug(f"Download error: {e}")
+            if filepath.exists():
+                filepath.unlink()
+            return False
+
+    def process_book(self, title: str, author: str) -> bool:
+        """Process a single book: search, download, catalog."""
+        # Check if already downloaded
+        if self.state.is_already_downloaded(title, author):
+            logger.debug(f"Already downloaded: {title}")
+            return False
+
+        # Search all sources
+        result = self.search_book(title, author)
+        if not result:
+            logger.info(f"❌ Not found (PDF/EPUB): {title} - {author}")
+            self.state.mark_not_found(title, author, [s.name for s in self.sources])
+            return False
+
+        url, format, source = result
+
+        # Determine category and filepath
+        category = self.state.get_category(title, author)
+        lib_dir = LIBRARY_PATH / category
+        lib_dir.mkdir(parents=True, exist_ok=True)
+
+        # Filename: "Author - Title.format"
+        filename = f"{author} - {title}".replace('/', '_').replace('\\', '_')
+        filename = f"{filename}.{format}"
+        filepath = lib_dir / filename
+
+        # Skip if already exists
+        if filepath.exists():
+            logger.debug(f"File exists: {filepath}")
+            return False
+
+        # Download
+        logger.info(f"Downloading {title}...")
+        if not self.download_file(url, filepath):
+            logger.warning(f"Failed to download: {title}")
+            return False
+
+        # Validate
+        if not FileValidator.is_valid(filepath, format):
+            logger.warning(f"File validation failed: {title}")
+            filepath.unlink()
+            return False
+
+        # Get file size
+        file_size_mb = filepath.stat().st_size / (1024 * 1024)
+
+        # Record in state
+        self.state.mark_downloaded(title, author, filepath, source, format, file_size_mb)
+
+        # Post to Discord
+        self._notify_discord(title, author, format, source, category, file_size_mb)
+
+        logger.info(f"✅ Downloaded: {title} ({file_size_mb:.2f} MB) from {source}")
+        return True
+
+    def _notify_discord(self, title: str, author: str, format: str, source: str, category: str, size_mb: float):
+        """Post success notification to Discord."""
+        if not DISCORD_WEBHOOK:
+            return
+
+        try:
+            payload = {
+                'embeds': [{
+                    'title': '📚 New Book Added to Library',
+                    'fields': [
+                        {'name': 'Title', 'value': title, 'inline': False},
+                        {'name': 'Author', 'value': author, 'inline': True},
+                        {'name': 'Format', 'value': format.upper(), 'inline': True},
+                        {'name': 'Source', 'value': source, 'inline': True},
+                        {'name': 'Category', 'value': category, 'inline': True},
+                        {'name': 'File Size', 'value': f'{size_mb:.2f} MB', 'inline': True},
+                        {'name': 'Library Total', 'value': f"{self.state.stats['total_downloaded']} books ({self.state.stats['total_size_mb']:.1f} MB)", 'inline': False},
+                    ],
+                    'color': 3066993,
+                    'timestamp': datetime.now().isoformat(),
+                }]
+            }
+
+            requests.post(
+                DISCORD_WEBHOOK,
+                json=payload,
+                timeout=10,
+                headers={'User-Agent': USER_AGENT}
+            )
+        except Exception as e:
+            logger.debug(f"Discord notification failed: {e}")
+
+    def run_cycle(self):
+        """Run one complete search cycle through canon."""
+        logger.info("=" * 80)
+        logger.info("LIBRARIAN CYCLE START")
+        logger.info("=" * 80)
+
+        books = self.load_canon()
+        if not books:
+            logger.error("No books loaded from canon")
+            return
+
+        downloaded_count = 0
+        self.state.stats['search_cycle'] += 1
+
+        for title, author in books:
+            if self.should_stop:
+                logger.info("Shutdown requested, stopping cycle")
+                break
+
+            try:
+                if self.process_book(title, author):
+                    downloaded_count += 1
+            except Exception as e:
+                logger.error(f"Error processing {title}: {e}")
+
+            # Rate limiting
+            time.sleep(0.5)
+
+        # Update state
+        self.state.stats['last_full_cycle'] = datetime.now().isoformat()
+        self.state.save()
+
+        logger.info("=" * 80)
+        logger.info(f"LIBRARIAN CYCLE COMPLETE")
+        logger.info(f"Downloaded: {downloaded_count} books")
+        logger.info(f"Total library: {self.state.stats['total_downloaded']} books ({self.state.stats['total_size_mb']:.1f} MB)")
+        logger.info("=" * 80)
+
+    def run_continuously(self, cycle_interval_hours: int = 6):
+        """Run LIBRARIAN continuously."""
+        logger.info(f"LIBRARIAN Agent starting (cycle every {cycle_interval_hours} hours)")
+
+        while not self.should_stop:
+            try:
+                self.run_cycle()
+            except Exception as e:
+                logger.error(f"Cycle error: {e}")
+
+            if self.should_stop:
+                break
+
+            # Wait for next cycle
+            logger.info(f"Waiting {cycle_interval_hours} hours until next cycle...")
+            for _ in range(cycle_interval_hours * 60):
+                if self.should_stop:
+                    break
+                time.sleep(60)
+
+        logger.info("LIBRARIAN Agent shutting down")
+
+
+def main():
+    """Entry point."""
+    agent = LibrarianAgent()
+
+    # Run continuously (cycle every 6 hours)
+    agent.run_continuously(cycle_interval_hours=6)
+
+
+if __name__ == '__main__':
+    main()

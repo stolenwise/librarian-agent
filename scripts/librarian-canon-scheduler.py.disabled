@@ -1,0 +1,501 @@
+#!/usr/bin/env python3
+"""
+LIBRARIAN Canon Scheduler
+Systematically extracts 15 books per hour from the St. John's Great Books Canon list
+and queues them for acquisition via librarian_want_list.
+
+Usage:
+  python librarian-canon-scheduler.py --run-once      # Add 15 books immediately
+  python librarian-canon-scheduler.py --schedule      # Run as hourly daemon
+  python librarian-canon-scheduler.py --status        # Show queue status
+  python librarian-canon-scheduler.py --reset         # Reset progress (start over)
+"""
+
+import sqlite3
+import json
+import re
+import os
+import sys
+from datetime import datetime, timedelta
+from pathlib import Path
+import time
+import signal
+import logging
+
+# Configuration
+CANON_FILE = "/home/lewis/Desktop/Private Library/ST_JOHNS_GREAT_BOOKS_CANON.txt"
+DB_PATH = "/home/lewis/aegis/data/sentinel.db"
+CONFIG_FILE = "/home/lewis/aegis/config/librarian-canon-schedule.json"
+LOG_FILE = "/home/lewis/aegis/logs/canon-scheduler.log"
+BOOKS_PER_HOUR = 15
+
+# Category mapping: St. John's Great Books canon categories → Private Library folders
+CATEGORY_MAP = {
+    "CLASSICAL GREEK LITERATURE": "Fiction",
+    "CLASSICAL GREEK HISTORY": "Politics",
+    "CLASSICAL GREEK PHILOSOPHY": "Philosophy",
+    "CLASSICAL SCIENCE AND MATHEMATICS": "Philosophy",
+    "CLASSICAL ROMAN LITERATURE": "Fiction",
+    "CLASSICAL ROMAN HISTORY": "Politics",
+    "MEDIEVAL THEOLOGY": "Theology",
+    "MEDIEVAL LITERATURE": "Fiction",
+    "RENAISSANCE AND EARLY MODERN LITERATURE": "Fiction",
+    "RENAISSANCE SCIENCE": "Philosophy",
+    "ENLIGHTENMENT PHILOSOPHY": "Philosophy",
+    "ENLIGHTENMENT SCIENCE": "Philosophy",
+    "ENLIGHTENMENT": "Philosophy",
+    "ROMANTICISM": "Fiction",
+    "19TH CENTURY LITERATURE": "Fiction",
+    "19TH CENTURY PHILOSOPHY": "Philosophy",
+    "19TH CENTURY SCIENCE": "Philosophy",
+    "20TH CENTURY MODERNISM": "Fiction",
+    "20TH CENTURY SCIENCE": "Philosophy",
+    "THEOLOGY": "Theology",
+    "POETRY": "Poetry",
+    "ESSAYS AND CULTURAL": "Philosophy",
+    "HISTORY": "Politics",
+    "SCIENCE": "Philosophy",
+    "POLITICAL PHILOSOPHY": "Politics",
+    "PHENOMENOLOGY": "Philosophy",
+    "MUSIC": "Poetry",
+    "METAPHYSICS": "Philosophy",
+    "EPISTEMOLOGY": "Philosophy",
+}
+
+# Setup logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    handlers=[
+        logging.FileHandler(LOG_FILE),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+
+
+class CanonParser:
+    """Parses the ST_JOHNS_GREAT_BOOKS_CANON.txt file."""
+
+    def __init__(self, filepath):
+        self.filepath = filepath
+        self.books = []
+        self.current_category = "Uncategorized"
+        self.parse()
+
+    def parse(self):
+        """Parse the canon file and extract all books."""
+        try:
+            with open(self.filepath, 'r', encoding='utf-8') as f:
+                lines = f.readlines()
+
+            for line in lines:
+                line = line.rstrip()
+
+                # Detect category headers
+                if line.startswith("====") and "===" in line:
+                    continue
+
+                # Extract category name from header lines
+                if line and not line.startswith(" ") and not line.startswith("=") and not line.startswith("\t"):
+                    if any(x in line.upper() for x in ["SACRED", "CHRISTIAN", "GREEK", "ROMAN", "MEDIEVAL",
+                                                         "RENAISSANCE", "ENLIGHTENMENT", "ROMANTICISM", "MODERNISM",
+                                                         "PHILOSOPHY", "LITERATURE", "THEOLOGY", "POETRY", "ESSAYS",
+                                                         "HISTORY", "SCIENCE", "POLITICAL", "ETHICS", "AESTHETICS",
+                                                         "LOGIC", "METAPHYSICS", "EPISTEMOLOGY", "PHENOMENOLOGY", "MEDIA",
+                                                         "MUSIC", "CLASSICAL", "19TH CENTURY", "20TH CENTURY"]):
+                        self.current_category = line.strip()
+                        continue
+
+                # Extract book entries
+                line_clean = line.strip()
+
+                # Skip empty lines, headers, bullets, and hyphens
+                if not line_clean or line.startswith("=") or line_clean.startswith("•") or line_clean.startswith("-"):
+                    continue
+
+                # Parse book entries (format: "Author - Title" or just "Title")
+                if " - " in line_clean:
+                    parts = line_clean.split(" - ", 1)
+                    author = parts[0].strip()
+                    title = parts[1].strip()
+                else:
+                    # Some entries are just titles
+                    author = "Unknown"
+                    title = line_clean
+
+                # Skip sub-entries (like • Inferno)
+                if title.startswith("•") or title.startswith("-"):
+                    continue
+
+                # Clean up author and title
+                author = author.replace("(", "").replace(")", "").strip()
+                title = title.replace("(", "").replace(")", "").strip()
+
+                if author and title and len(title) > 2:
+                    self.books.append({
+                        "title": title,
+                        "author": author,
+                        "canon_category": self.current_category,
+                        "library_category": self.map_category(self.current_category)
+                    })
+
+            logger.info(f"Parsed {len(self.books)} books from canon list")
+
+        except Exception as e:
+            logger.error(f"Error parsing canon file: {e}")
+            raise
+
+    def map_category(self, canon_category):
+        """Map canon category to Private Library category."""
+        for key, value in CATEGORY_MAP.items():
+            if key in canon_category.upper():
+                return value
+        return "Fiction"  # Default category
+
+    def get_books(self, start_index=0, count=15):
+        """Get next N books starting from index."""
+        return self.books[start_index:start_index + count]
+
+
+class ScheduleManager:
+    """Manages the hourly scheduling and database persistence."""
+
+    def __init__(self, db_path, config_path):
+        self.db_path = db_path
+        self.config_path = config_path
+        self.config = self.load_config()
+        self.current_index = self.config.get("current_index", 0)
+        self.total_queued = self.config.get("total_queued", 0)
+        self.start_time = self.config.get("start_time", datetime.now().isoformat())
+
+    def load_config(self):
+        """Load or initialize the schedule config."""
+        if os.path.exists(self.config_path):
+            try:
+                with open(self.config_path, 'r') as f:
+                    return json.load(f)
+            except:
+                return self.default_config()
+        return self.default_config()
+
+    def default_config(self):
+        """Create default config."""
+        return {
+            "current_index": 0,
+            "total_queued": 0,
+            "start_time": datetime.now().isoformat(),
+            "last_run": None,
+            "status": "active"
+        }
+
+    def save_config(self):
+        """Persist config to file."""
+        os.makedirs(os.path.dirname(self.config_path), exist_ok=True)
+        self.config["current_index"] = self.current_index
+        self.config["total_queued"] = self.total_queued
+        self.config["last_run"] = datetime.now().isoformat()
+
+        with open(self.config_path, 'w') as f:
+            json.dump(self.config, f, indent=2)
+
+        logger.info(f"Config saved: index={self.current_index}, total_queued={self.total_queued}")
+
+    def add_books_to_queue(self, books):
+        """Add books to librarian_want_list with status='pending'."""
+        try:
+            conn = sqlite3.connect(self.db_path)
+            cursor = conn.cursor()
+
+            added = 0
+            for book in books:
+                try:
+                    cursor.execute("""
+                        INSERT INTO librarian_want_list
+                        (search_query, subject_category, priority, status, created_at)
+                        VALUES (?, ?, ?, ?, ?)
+                    """, (
+                        f"{book['title']} by {book['author']}",
+                        book['library_category'],
+                        3,  # Normal priority
+                        'pending',
+                        datetime.now().isoformat()
+                    ))
+                    added += 1
+                except sqlite3.IntegrityError:
+                    # Book already in queue, skip
+                    logger.debug(f"Duplicate: {book['title']}")
+                    continue
+
+            conn.commit()
+            conn.close()
+
+            logger.info(f"Added {added} books to queue")
+            self.total_queued += added
+            return added
+
+        except Exception as e:
+            logger.error(f"Error adding books to queue: {e}")
+            return 0
+
+    def get_status(self):
+        """Get current queue status."""
+        try:
+            conn = sqlite3.connect(self.db_path)
+            cursor = conn.cursor()
+
+            # Count pending items
+            cursor.execute("SELECT COUNT(*) FROM librarian_want_list WHERE status = 'pending'")
+            pending = cursor.fetchone()[0]
+
+            # Count acquired items
+            cursor.execute("SELECT COUNT(*) FROM librarian_want_list WHERE status = 'acquired'")
+            acquired = cursor.fetchone()[0]
+
+            # Count total items
+            cursor.execute("SELECT COUNT(*) FROM librarian_want_list")
+            total = cursor.fetchone()[0]
+
+            conn.close()
+
+            return {
+                "pending": pending,
+                "acquired": acquired,
+                "total": total,
+                "current_index": self.current_index,
+                "total_queued": self.total_queued
+            }
+
+        except Exception as e:
+            logger.error(f"Error getting status: {e}")
+            return None
+
+
+def run_once(books_per_hour=BOOKS_PER_HOUR):
+    """Queue 15 books immediately."""
+    try:
+        parser = CanonParser(CANON_FILE)
+        manager = ScheduleManager(DB_PATH, CONFIG_FILE)
+
+        logger.info(f"Running once: queuing {books_per_hour} books")
+
+        # Get next batch
+        next_books = parser.get_books(manager.current_index, books_per_hour)
+
+        if not next_books:
+            logger.warning(f"No more books to queue (reached end of canon at index {manager.current_index})")
+            return False
+
+        # Add to database
+        added = manager.add_books_to_queue(next_books)
+
+        # Update index
+        manager.current_index += added
+        manager.save_config()
+
+        # Display summary
+        status = manager.get_status()
+        if status:
+            logger.info(f"Queue Status: {status['pending']} pending, {status['acquired']} acquired, {status['total']} total")
+
+        logger.info(f"✅ Queued {added}/{books_per_hour} books")
+        return True
+
+    except Exception as e:
+        logger.error(f"Error in run_once: {e}")
+        return False
+
+
+def run_scheduled():
+    """Run as a daemon, queuing 15 books every hour."""
+    try:
+        parser = CanonParser(CANON_FILE)
+        manager = ScheduleManager(DB_PATH, CONFIG_FILE)
+
+        logger.info(f"Starting canon scheduler daemon ({len(parser.books)} books available)")
+        logger.info(f"Resuming from index {manager.current_index}")
+
+        def signal_handler(sig, frame):
+            logger.info("Received interrupt signal, shutting down gracefully")
+            manager.save_config()
+            sys.exit(0)
+
+        signal.signal(signal.SIGINT, signal_handler)
+        signal.signal(signal.SIGTERM, signal_handler)
+
+        last_run = None
+
+        while True:
+            now = datetime.now()
+
+            # Run at the top of every hour (or after 1 hour if starting mid-hour)
+            if last_run is None or (now - last_run).total_seconds() >= 3600:
+
+                # Check if we've reached the end
+                if manager.current_index >= len(parser.books):
+                    logger.info(f"✅ Canon scheduler complete! All {len(parser.books)} books queued")
+                    logger.info(f"Total queued: {manager.total_queued}")
+                    manager.save_config()
+                    break
+
+                # Queue next batch
+                next_books = parser.get_books(manager.current_index, BOOKS_PER_HOUR)
+                added = manager.add_books_to_queue(next_books)
+
+                # Update tracking
+                manager.current_index += added
+                manager.save_config()
+
+                # Status report
+                status = manager.get_status()
+                if status:
+                    hours_elapsed = (datetime.fromisoformat(manager.start_time) - now).total_seconds() / 3600
+                    logger.info(f"📊 Queue: {status['pending']} pending | {status['acquired']} acquired | "
+                              f"Index: {manager.current_index}/{len(parser.books)}")
+
+                logger.info(f"⏰ Next batch in 60 minutes...")
+                last_run = now
+
+            # Sleep for 5 minutes before checking again
+            time.sleep(300)
+
+    except KeyboardInterrupt:
+        logger.info("Scheduler interrupted by user")
+        manager.save_config()
+    except Exception as e:
+        logger.error(f"Error in scheduled mode: {e}")
+        raise
+
+
+def show_status():
+    """Display current queue status."""
+    try:
+        manager = ScheduleManager(DB_PATH, CONFIG_FILE)
+        status = manager.get_status()
+
+        if status:
+            parser = CanonParser(CANON_FILE)
+            remaining = len(parser.books) - manager.current_index
+
+            print("\n" + "="*60)
+            print("LIBRARIAN CANON SCHEDULER STATUS")
+            print("="*60)
+            print(f"Total books in canon:     {len(parser.books)}")
+            print(f"Current index:            {manager.current_index}")
+            print(f"Remaining to queue:       {remaining}")
+            print(f"Total already queued:     {manager.total_queued}")
+            print(f"\nWant List Status:")
+            print(f"  Pending:                {status['pending']}")
+            print(f"  Acquired:               {status['acquired']}")
+            print(f"  Total in want list:     {status['total']}")
+            print(f"\nScheduler started:        {manager.start_time}")
+            if manager.config.get('last_run'):
+                print(f"Last run:                 {manager.config['last_run']}")
+            print("="*60 + "\n")
+        else:
+            print("Could not retrieve status")
+
+    except Exception as e:
+        logger.error(f"Error showing status: {e}")
+        print(f"Error: {e}")
+
+
+def reset_progress():
+    """Reset scheduler to start from beginning."""
+    try:
+        manager = ScheduleManager(DB_PATH, CONFIG_FILE)
+
+        print("\n⚠️  Are you sure you want to reset the canon scheduler? (y/N)")
+        response = input().strip().lower()
+
+        if response == 'y':
+            manager.current_index = 0
+            manager.total_queued = 0
+            manager.config["current_index"] = 0
+            manager.config["total_queued"] = 0
+            manager.config["start_time"] = datetime.now().isoformat()
+            manager.save_config()
+
+            logger.info("Canon scheduler reset to beginning")
+            print("✅ Scheduler reset. Starting fresh from first book.")
+        else:
+            print("Reset cancelled.")
+
+    except Exception as e:
+        logger.error(f"Error resetting: {e}")
+
+
+def main():
+    """Main entry point."""
+    if len(sys.argv) < 2:
+        print(__doc__)
+        sys.exit(1)
+
+    command = sys.argv[1]
+
+    if command == "--run-once":
+        success = run_once()
+        sys.exit(0 if success else 1)
+
+    elif command == "--schedule":
+        run_scheduled()
+
+    elif command == "--status":
+        show_status()
+
+    elif command == "--reset":
+        reset_progress()
+
+    else:
+        print(f"Unknown command: {command}")
+        print(__doc__)
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
+
+
+def post_to_discord(stats):
+    """Post LIBRARIAN status update to Discord #librarian"""
+    try:
+        import subprocess
+        
+        env_vars = {}
+        with open('/home/lewis/aegis/config/.env') as f:
+            for line in f:
+                if '=' in line and not line.startswith('#'):
+                    key, val = line.strip().split('=', 1)
+                    env_vars[key] = val
+        
+        webhook = env_vars.get('DISCORD_WEBHOOK_SENTINEL')
+        if not webhook:
+            return
+        
+        progress_pct = (stats['total_queued'] / 251) * 100
+        progress_bar = '█' * int(progress_pct / 5) + '░' * (20 - int(progress_pct / 5))
+        
+        import json
+        payload = {
+            'content': '📚 **LIBRARIAN Status Update**',
+            'embeds': [{
+                'title': 'Canon Scheduler Progress',
+                'description': f'{progress_bar} {progress_pct:.1f}%',
+                'fields': [
+                    {'name': '✅ Queued', 'value': f"**{stats['total_queued']}/251** books", 'inline': True},
+                    {'name': '⏳ Pending', 'value': f"**{stats['pending']}** waiting", 'inline': True},
+                    {'name': '📥 Acquired', 'value': f"**{stats['acquired']}** downloaded", 'inline': True},
+                    {'name': 'Rate', 'value': '15 books/hour', 'inline': True},
+                    {'name': 'ETA', 'value': f"~{(251 - stats['total_queued']) / 15:.0f} hours", 'inline': True},
+                    {'name': 'Last Update', 'value': f"<t:{int(time.time())}:R>", 'inline': True}
+                ],
+                'color': 3066993
+            }]
+        }
+        
+        subprocess.run(['curl', '-s', '-X', 'POST', webhook,
+            '-H', 'Content-Type: application/json',
+            '-d', json.dumps(payload)], timeout=10)
+        
+    except Exception as e:
+        pass

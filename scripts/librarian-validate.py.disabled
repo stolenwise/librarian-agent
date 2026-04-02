@@ -1,0 +1,294 @@
+#!/usr/bin/env python3
+"""
+LIBRARIAN System Validation & Health Check
+Comprehensive test suite to verify all components are working correctly
+"""
+
+import sqlite3
+import json
+import os
+import sys
+from datetime import datetime
+from pathlib import Path
+
+class LibrarianValidator:
+    def __init__(self):
+        self.errors = []
+        self.warnings = []
+        self.checks_passed = 0
+        self.checks_failed = 0
+
+    def check(self, name, condition, error_msg=""):
+        """Record a check result"""
+        if condition:
+            print(f"  ✅ {name}")
+            self.checks_passed += 1
+        else:
+            print(f"  ❌ {name}")
+            if error_msg:
+                self.errors.append(f"{name}: {error_msg}")
+            self.checks_failed += 1
+
+    def warn(self, name, condition, warning_msg=""):
+        """Record a warning"""
+        if not condition:
+            print(f"  ⚠️  {name}")
+            if warning_msg:
+                self.warnings.append(f"{name}: {warning_msg}")
+
+    def validate_sqlite(self):
+        """Validate SQLite database"""
+        print("\n📊 SQLite Database")
+        print("─" * 50)
+
+        db_path = "/home/lewis/aegis/data/sentinel.db"
+
+        self.check("Database exists", os.path.exists(db_path), db_path)
+
+        try:
+            db = sqlite3.connect(db_path)
+            cursor = db.cursor()
+
+            # Check tables
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE 'librarian%'")
+            tables = cursor.fetchall()
+            self.check(f"All 6 LIBRARIAN tables exist", len(tables) >= 6, f"Found {len(tables)}")
+
+            # Check table sizes
+            for table_name in ['librarian_acquisitions', 'librarian_content', 'librarian_want_list']:
+                cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
+                count = cursor.fetchone()[0]
+                status = "ready" if count == 0 or count > 0 else "empty"
+                print(f"    • {table_name}: {count} records ({status})")
+
+            # Check database integrity
+            cursor.execute("PRAGMA integrity_check")
+            integrity = cursor.fetchone()[0]
+            self.check("Database integrity", integrity == "ok", integrity)
+
+            db.close()
+
+        except Exception as e:
+            self.check("Database connection", False, str(e))
+
+    def validate_notion(self):
+        """Validate Notion configuration"""
+        print("\n🗂️  Notion Databases")
+        print("─" * 50)
+
+        try:
+            with open('/home/lewis/.env.sentinel', 'r') as f:
+                env = {}
+                for line in f:
+                    if '=' in line and not line.startswith('#'):
+                        key, val = line.strip().split('=', 1)
+                        env[key] = val
+
+            lib_db = env.get('NOTION_DATABASE_LIBRARY', '')
+            want_db = env.get('NOTION_DATABASE_WANT_LIST', '')
+
+            self.check("Library Catalog DB ID configured", len(lib_db) > 0, lib_db[:20] if lib_db else "not set")
+            self.check("Want List DB ID configured", len(want_db) > 0, want_db[:20] if want_db else "not set")
+
+            if lib_db:
+                print(f"    • Library Catalog: {lib_db}")
+            if want_db:
+                print(f"    • Want List: {want_db}")
+
+        except Exception as e:
+            self.check("Notion config", False, str(e))
+
+    def validate_config(self):
+        """Validate configuration files"""
+        print("\n⚙️  Configuration Files")
+        print("─" * 50)
+
+        config_path = "/home/lewis/aegis/config/librarian.config.json"
+        env_path = "/home/lewis/.env.sentinel"
+
+        # Check config file
+        if os.path.exists(config_path):
+            try:
+                with open(config_path, 'r') as f:
+                    config = json.load(f)
+                self.check("librarian.config.json valid", True)
+
+                # Check key settings
+                storage = config.get('storage', {})
+                sources = config.get('sources', {})
+
+                enabled_apis = sum(1 for api in sources.values() if api.get('enabled'))
+                self.check(f"API sources configured", enabled_apis >= 3, f"{enabled_apis}/3 enabled")
+
+                storage_limit = storage.get('storage_limit_gb', 0)
+                self.warn(f"Storage limit reasonable", 100 <= storage_limit <= 5000,
+                         f"{storage_limit} GB (recommend 500-2000)")
+
+            except json.JSONDecodeError as e:
+                self.check("librarian.config.json valid", False, str(e))
+        else:
+            self.check("librarian.config.json exists", False, "not found")
+
+        self.check(".env.sentinel exists", os.path.exists(env_path))
+
+    def validate_workflows(self):
+        """Validate workflow files"""
+        print("\n🔄 Workflow Files")
+        print("─" * 50)
+
+        workflow_dir = "/home/lewis/aegis/n8n-workflows"
+        workflows = [
+            "librarian-daily-acquisition.json",
+            "librarian-manual-search.json",
+            "librarian-want-list-monitor.json"
+        ]
+
+        for wf in workflows:
+            path = os.path.join(workflow_dir, wf)
+            exists = os.path.exists(path)
+            self.check(f"{wf}", exists)
+
+            if exists:
+                try:
+                    with open(path, 'r') as f:
+                        data = json.load(f)
+                    nodes = data.get('nodes', [])
+                    print(f"    • {len(nodes)} nodes")
+                except:
+                    print(f"    • ⚠️  Invalid JSON")
+
+    def validate_storage(self):
+        """Validate library storage"""
+        print("\n📚 Library Storage")
+        print("─" * 50)
+
+        library_path = "/home/lewis/aegis/library"
+
+        self.check("Library directory exists", os.path.isdir(library_path))
+
+        if os.path.isdir(library_path):
+            # Count files and size
+            total_files = 0
+            total_size = 0
+            categories = []
+
+            for root, dirs, files in os.walk(library_path):
+                for d in dirs:
+                    categories.append(d)
+                total_files += len(files)
+                for f in files:
+                    fpath = os.path.join(root, f)
+                    try:
+                        total_size += os.path.getsize(fpath)
+                    except:
+                        pass
+
+            size_mb = total_size / (1024 * 1024)
+            print(f"    • Categories: {len(set(categories))}")
+            print(f"    • Books: {total_files}")
+            print(f"    • Storage used: {size_mb:.1f} MB")
+
+            self.check("Library folders initialized", len(categories) >= 10, f"{len(categories)} categories")
+
+    def validate_documentation(self):
+        """Validate documentation files"""
+        print("\n📖 Documentation")
+        print("─" * 50)
+
+        docs = [
+            "LIBRARIAN-START-HERE.md",
+            "LIBRARIAN-INDEX.md",
+            "LIBRARIAN-QUICK-START.md",
+            "LIBRARIAN-SETUP.md",
+            "LIBRARIAN-DEPLOYMENT-CHECKLIST.md",
+            "LIBRARIAN-README.md",
+            "N8N-IMPORT-GUIDE.md"
+        ]
+
+        found = 0
+        for doc in docs:
+            path = f"/home/lewis/aegis/{doc}"
+            if os.path.exists(path):
+                found += 1
+                self.check(doc, True)
+            else:
+                self.check(doc, False)
+
+        print(f"\n    Total: {found}/{len(docs)} guides available")
+
+    def validate_environment(self):
+        """Validate environment setup"""
+        print("\n🔧 Environment")
+        print("─" * 50)
+
+        # Check required environment variables
+        required_vars = [
+            'NOTION_API_KEY',
+            'NOTION_DATABASE_LIBRARY',
+            'NOTION_DATABASE_WANT_LIST',
+            'DISCORD_WEBHOOK_LIBRARIAN',
+            'LIBRARIAN_STORAGE_PATH'
+        ]
+
+        try:
+            with open('/home/lewis/.env.sentinel', 'r') as f:
+                env = set()
+                for line in f:
+                    if '=' in line and not line.startswith('#'):
+                        key = line.split('=')[0].strip()
+                        env.add(key)
+
+            for var in required_vars:
+                self.check(f"{var} set", var in env)
+
+        except Exception as e:
+            self.check("Environment variables", False, str(e))
+
+    def run_all(self):
+        """Run all validations"""
+        print("\n" + "="*70)
+        print("🏛️  LIBRARIAN SYSTEM VALIDATION")
+        print("="*70)
+
+        self.validate_environment()
+        self.validate_sqlite()
+        self.validate_notion()
+        self.validate_config()
+        self.validate_workflows()
+        self.validate_storage()
+        self.validate_documentation()
+
+        # Summary
+        print("\n" + "="*70)
+        print("📊 VALIDATION SUMMARY")
+        print("="*70)
+        print(f"\n✅ Passed: {self.checks_passed}")
+        print(f"❌ Failed: {self.checks_failed}")
+
+        if self.warnings:
+            print(f"\n⚠️  Warnings ({len(self.warnings)}):")
+            for w in self.warnings:
+                print(f"  • {w}")
+
+        if self.errors:
+            print(f"\n❌ Errors ({len(self.errors)}):")
+            for e in self.errors:
+                print(f"  • {e}")
+
+        # Overall status
+        print("\n" + "="*70)
+        if self.checks_failed == 0:
+            print("✅ SYSTEM READY FOR n8n IMPORT")
+            print("\nNext: Import workflows to n8n and enable schedule")
+        else:
+            print(f"⚠️  {self.checks_failed} issues need attention")
+            print("\nCheck errors above and consult LIBRARIAN-SETUP.md")
+
+        print("="*70 + "\n")
+
+        return self.checks_failed == 0
+
+if __name__ == "__main__":
+    validator = LibrarianValidator()
+    success = validator.run_all()
+    sys.exit(0 if success else 1)

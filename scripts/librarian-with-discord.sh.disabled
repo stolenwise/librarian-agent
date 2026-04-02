@@ -1,0 +1,42 @@
+#!/bin/bash
+# Run LIBRARIAN download + post to Discord
+
+python3 /home/lewis/aegis/scripts/librarian-download-hourly.py > /tmp/librarian.log 2>&1
+
+# Get stats and post to Discord
+python3 << 'PYTHON'
+import json, subprocess
+config = json.load(open('/home/lewis/aegis/config/librarian-canon-schedule.json'))
+env = {}
+with open('/home/lewis/aegis/config/.env') as f:
+    for line in f:
+        if '=' in line and not line.startswith('#'):
+            k, v = line.strip().split('=', 1)
+            env[k] = v
+
+webhook = env.get('DISCORD_WEBHOOK_LIBRARIAN')
+if webhook:
+    downloaded = config.get('total_downloaded', 0)
+    pct = (downloaded / 251) * 100
+    bar = '█' * int(pct / 5) + '░' * (20 - int(pct / 5))
+
+    payload = {
+        'content': '📚 **LIBRARIAN Download Update**',
+        'embeds': [{
+            'title': f'Downloading to Private Library - {pct:.1f}% Complete',
+            'description': bar,
+            'fields': [
+                {'name': '✅ Downloaded', 'value': f"**{downloaded}/251** books", 'inline': True},
+                {'name': '⏳ Remaining', 'value': f"**{251-downloaded}** books", 'inline': True},
+                {'name': '📁 Location', 'value': '/home/lewis/Desktop/Private Library', 'inline': False},
+                {'name': '⏱️ Rate', 'value': '~15 books/hour (as available)', 'inline': True},
+                {'name': '📅 ETA', 'value': f"~{(251-downloaded)/10:.0f} hours", 'inline': True}
+            ],
+            'color': 3066993
+        }]
+    }
+
+    subprocess.run(['curl', '-s', '-X', 'POST', webhook,
+        '-H', 'Content-Type: application/json',
+        '-d', json.dumps(payload)], timeout=10)
+PYTHON
