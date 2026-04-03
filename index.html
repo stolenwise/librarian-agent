@@ -525,6 +525,53 @@ footer a:hover { color: var(--gold); }
   </div>
 </section>
 
+      <svg viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg" style="width: 50%; height: auto;">
+        <defs>
+          <style>
+            .loop-text { font-family: 'JetBrains Mono', monospace; font-size: 13px; fill: #E2D9CC; }
+            .loop-label { font-family: 'Inter', sans-serif; font-size: 11px; fill: #6B6055; text-transform: uppercase; letter-spacing: 1px; }
+            .loop-tech { font-family: 'JetBrains Mono', monospace; font-size: 9px; fill: #8A8078; }
+            .loop-arrow { stroke: #C9A96E; stroke-width: 2.5; fill: none; marker-end: url(#arrowhead); stroke-linecap: round; }
+            .loop-circle { stroke: #2E2820; stroke-width: 2; fill: none; }
+            .step-circle { fill: #111009; stroke: #252018; stroke-width: 2; }
+            .step-num { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; fill: #C9A96E; }
+          </style>
+          <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+            <polygon points="0 0, 10 3, 0 6" fill="#C9A96E"/>
+          </marker>
+        </defs>
+        <circle cx="320" cy="240" r="160" class="loop-circle"/>
+        <path d="M 340 85 A 160 160 0 0 1 455 145" class="loop-arrow"/>
+        <path d="M 475 175 A 160 160 0 0 1 450 310" class="loop-arrow"/>
+        <path d="M 420 340 A 160 160 0 0 1 210 340" class="loop-arrow"/>
+        <path d="M 185 310 A 160 160 0 0 1 160 175" class="loop-arrow"/>
+        <path d="M 175 125 A 160 160 0 0 1 305 70" class="loop-arrow"/>
+        <circle cx="320" cy="60" r="30" class="step-circle"/>
+        <text x="320" y="68" class="step-num" text-anchor="middle">01</text>
+        <text x="320" y="115" class="loop-label" text-anchor="middle">QUEUE</text>
+        <text x="320" y="128" class="loop-tech" text-anchor="middle">Python · SQLite · n8n</text>
+        <circle cx="475" cy="145" r="30" class="step-circle"/>
+        <text x="475" y="153" class="step-num" text-anchor="middle">02</text>
+        <text x="475" y="205" class="loop-label" text-anchor="middle">DISCOVER</text>
+        <text x="475" y="218" class="loop-tech" text-anchor="middle">Gutenberg · Archive.org</text>
+        <text x="475" y="231" class="loop-tech" text-anchor="middle">Open Library</text>
+        <circle cx="450" cy="330" r="30" class="step-circle"/>
+        <text x="450" y="338" class="step-num" text-anchor="middle">03</text>
+        <text x="450" y="390" class="loop-label" text-anchor="middle">VALIDATE</text>
+        <text x="450" y="403" class="loop-tech" text-anchor="middle">SHA-256 · Fuzzy Match</text>
+        <circle cx="190" cy="330" r="30" class="step-circle"/>
+        <text x="190" y="338" class="step-num" text-anchor="middle">04</text>
+        <text x="190" y="390" class="loop-label" text-anchor="middle">STORE</text>
+        <text x="190" y="403" class="loop-tech" text-anchor="middle">Disk · librarian-state.json</text>
+        <circle cx="160" cy="145" r="30" class="step-circle"/>
+        <text x="160" y="153" class="step-num" text-anchor="middle">05</text>
+        <text x="160" y="205" class="loop-label" text-anchor="middle">NOTIFY</text>
+        <text x="160" y="218" class="loop-tech" text-anchor="middle">Discord · Webhooks</text>
+        <text x="160" y="231" class="loop-tech" text-anchor="middle">systemd logs</text>
+        <text x="320" y="245" class="loop-text" text-anchor="middle" style="font-size:11px;fill:#6B6055;">24/7</text>
+        <text x="320" y="262" class="loop-text" text-anchor="middle" style="font-size:11px;fill:#6B6055;">AUTONOMOUS</text>
+      </svg>
+
 <!-- ── TICKER ── -->
 <div class="ticker">
   <div class="ticker-item">
